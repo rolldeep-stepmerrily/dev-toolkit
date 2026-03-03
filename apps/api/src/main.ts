@@ -51,7 +51,7 @@ async function bootstrap() {
       '/docs',
       apiReference({
         content: document,
-        metaData: { title: 'fixme' },
+        metaData: { title: 'dev-toolkit' },
         theme: 'deepSpace',
       }),
     );
