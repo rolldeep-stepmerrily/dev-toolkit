@@ -1,53 +1,126 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.5/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "develop"
+  },
+  "files": {
+    "ignoreUnknown": false
+  },
   "formatter": {
     "enabled": true,
-    "lineWidth": 120,
     "indentStyle": "space",
-    "indentWidth": 2
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single",
-      "trailingCommas": "all",
-      "arrowParentheses": "always",
-      "bracketSpacing": true,
-      "semicolons": "always"
-    }
+    "attributePosition": "multiline",
+    "lineWidth": 120
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "off"
+      "nursery": {
+        "useExhaustiveSwitchCases": "error"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "error",
+        "noUselessStringConcat": "error",
+        "noVoid": "error",
+        "useDateNow": "error",
+        "useSimplifiedLogicExpression": "error",
+        "noUselessConstructor": "off"
+      },
+      "correctness": {
+        "useSingleJsDocAsterisk": "error",
+        "noUnusedImports": "error"
       },
       "style": {
-        "useExplicitType": "off"
-      }
-    }
-  },
-  "overrides": [
-    {
-      "include": [
-        "**/*.strategy.ts",
-        "**/*.controller.ts",
-        "**/*.service.ts",
-        "**/*.error.ts"
-      ],
-      "linter": {
-        "rules": {
-          "style": {
-            "useExplicitType": "error"
+        "useReadonlyClassProperties": "error",
+        "useObjectSpread": "error",
+        "noYodaExpression": "error",
+        "noNamespace": "error",
+        "useEnumInitializers": "error",
+        "useDefaultSwitchClause": "error",
+        "useExplicitLengthCheck": "error",
+        "useForOf": "error",
+        "useThrowNewError": "error",
+        "useThrowOnlyError": "error",
+        "useImportType": "off",
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": true,
+            "requireAscii": false,
+            "filenameCases": ["kebab-case", "export"]
           }
-        }
+        },
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false,
+            "requireAscii": false,
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "typeLike"
+                },
+                "formats": ["PascalCase"]
+              },
+              {
+                "selector": {
+                  "kind": "classProperty",
+                  "modifiers": ["static"]
+                },
+                "formats": ["PascalCase"]
+              },
+              {
+                "selector": {
+                  "kind": "classProperty",
+                  "modifiers": ["static", "readonly"]
+                },
+                "formats": ["PascalCase"]
+              },
+              {
+                "selector": {
+                  "kind": "objectLiteralMember"
+                },
+                "match": ".*|[$](.*?)",
+                "formats": ["camelCase", "PascalCase"]
+              },
+              {
+                "selector": {
+                  "kind": "classMember"
+                },
+                "match": ".*|[ㄱ-ㅎ|ㅏ-ㅣ|가-힣](.*?)"
+              }
+            ]
+          }
+        },
+        "useAsConstAssertion": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noUselessElse": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noConsole": "error",
+        "noEmptyBlockStatements": "error",
+        "useAwait": "error",
+        "useErrorMessage": "error"
       }
     }
-  ],
-  "organizeImports": {
-    "enabled": true
   },
-  "files": {
-    "ignore": ["**/dist/**", "**/node_modules/**", "**/build/**", "**/.next/**"]
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   }
 }

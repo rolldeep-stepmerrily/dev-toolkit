@@ -5,7 +5,7 @@ import { Response } from 'express';
 interface IErrorResponse {
   message: string;
   errorCode?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 @Catch(HttpException)
@@ -23,7 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const isUnAuthorized = statusCode === HttpStatus.UNAUTHORIZED;
     const isBadRequest = statusCode === HttpStatus.BAD_REQUEST;
 
-    let errorCode;
+    let errorCode: string;
 
     if (error.errorCode) {
       errorCode = error.errorCode;

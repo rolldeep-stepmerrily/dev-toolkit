@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: 사용 */
 import { AppException, GLOBAL_ERRORS } from '@@exceptions';
 
 export const CatchDatabaseErrors = () => {
@@ -18,6 +19,7 @@ export const CatchDatabaseErrors = () => {
         try {
           return await originalMethod.apply(this, args);
         } catch (e) {
+          // biome-ignore lint/suspicious/noConsole: 사용
           console.error(e);
 
           throw new AppException(GLOBAL_ERRORS.DATABASE_ERROR);
