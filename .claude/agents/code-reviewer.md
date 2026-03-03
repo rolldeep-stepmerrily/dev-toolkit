@@ -18,9 +18,8 @@ model: sonnet
 |------|------|-----------|
 | 일반 코딩 컨벤션 | `.claude/skills/code-convention/general-convention/SKILL.md` | 코드 작성 규칙, 포맷팅 |
 | JSDoc 컨벤션 | `.claude/skills/code-convention/jsdoc-convention/SKILL.md` | 함수/메서드 문서화 |
-| Git 커밋 컨벤션 | `.claude/skills/git-convention/git-commit-convention/SKILL.md` | 커밋 메시지, 브랜치명 |
-| Git PR 컨벤션 | `.claude/skills/git-convention/git-pr-convention/SKILL.md` | PR 생성 워크플로우 |
-| 나무위키 문법 | `.claude/skills/namuwiki-syntax/SKILL.md` | 나무마크 변환 규칙 |
+| Git 커밋 컨벤션 | `.claude/skills/git-convention/commit-convention/SKILL.md` | 커밋 메시지, 브랜치명 |
+| Git PR 컨벤션 | `.claude/skills/git-convention/pull-request-convention/SKILL.md` | PR 생성 워크플로우 |
 
 **중요**: 세부 규칙이 기억나지 않으면 해당 스킬 파일을 직접 Read하여 정확한 컨벤션 확인 후 리뷰하세요.
 
@@ -81,9 +80,11 @@ model: sonnet
 ## 파일 유형별 검사 (스킬 참조)
 
 ### TypeScript/JavaScript 코드
+
 > 📖 상세: `.claude/skills/code-convention/general-convention/SKILL.md`
 
 **Quick Check:**
+
 - [ ] 화살표 함수 사용 (클래스 메서드 제외)
 - [ ] else/else if 지양, early return 사용
 - [ ] return/continue/break/throw 위 공백
@@ -91,17 +92,21 @@ model: sonnet
 - [ ] isDefined() 사용 (null 체크)
 
 ### 함수/메서드 문서화
+
 > 📖 상세: `.claude/skills/code-convention/jsdoc-convention/SKILL.md`
 
 **Quick Check:**
+
 - [ ] 모든 메서드에 JSDoc 주석
 - [ ] void/Promise<void> 반환 시 @returns 생략
 - [ ] 한글 설명, 마침표 없음
 
 ### 커밋 메시지
-> 📖 상세: `.claude/skills/git-convention/git-commit-convention/SKILL.md`
+
+> 📖 상세: `.claude/skills/git-convention/commit-convention/SKILL.md`
 
 **Quick Check:**
+
 - [ ] 형식: `<type>: <subject>`
 - [ ] 타입: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`
 - [ ] 제목: 50자 이내, 마침표 없음, 한국어
@@ -168,8 +173,8 @@ const apiKey = process.env.API_KEY;
 
 ## 리뷰 완료 후 체크
 
-1. **Lint 검사**: `npm run lint` 통과 여부 (Biome 사용)
-2. **빌드 검사**: `npm run build` 통과 여부
+1. **Lint 검사**: `pnpm lint` 통과 여부 (Biome 사용)
+2. **빌드 검사**: `pnpm build` 통과 여부
 3. **컨벤션 준수**:
    - [ ] 화살표 함수 사용
    - [ ] JSDoc 주석 추가

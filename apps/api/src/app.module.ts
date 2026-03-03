@@ -17,6 +17,8 @@ import { PrismaModule } from './common/prisma';
         DATABASE_URL: Joi.string().required(),
         ADMIN_NAME: Joi.string().required(),
         ADMIN_PASSWORD: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().default(6379),
       }),
       isGlobal: true,
       envFilePath: '.env',
