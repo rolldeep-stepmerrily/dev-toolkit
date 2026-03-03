@@ -1,4 +1,3 @@
-import * as fs from 'node:fs';
 import { join } from 'node:path';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -41,12 +40,7 @@ async function bootstrap() {
   } else {
     app.use(express.static(join(__dirname, '..', 'docs')));
 
-    app.useStaticAssets(join(__dirname, '..', 'docs'), { prefix: '/docs/' });
-
-    const docs = fs.readFileSync(join(__dirname, '..', 'docs', 'docs.md'), 'utf8');
-
     const config = new DocumentBuilder()
-      .setDescription(docs)
       .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'accessToken')
       .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'refreshToken')
       .build();

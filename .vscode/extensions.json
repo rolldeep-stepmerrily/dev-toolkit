@@ -1,3 +1,12 @@
 {
-  "recommendations": ["biomejs.biome", "Prisma.prisma"]
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "biomejs.biome",
+    "yoavbls.pretty-ts-errors",
+    "DominicVonk.parameter-hints",
+    "orta.vscode-jest",
+    "usernamehw.errorlens",
+    "pkief.material-icon-theme",
+    "Prisma.prisma"
+  ]
 }

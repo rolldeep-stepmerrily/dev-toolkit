@@ -1,8 +1,5 @@
 {
   "cSpell.words": ["rolldeep", "stepmerrily"],
-  "editor.fontFamily": "D2Coding",
-  "editor.fontSize": 14,
-  "editor.fontLigatures": true,
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
