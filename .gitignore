@@ -1,13 +1,19 @@
 # compiled output
-/dist
-/node_modules
-/build
+dist
+build
+.next
+
+# Dependencies
+node_modules
+**/node_modules
+
+# pnpm
+pnpm-debug.log*
 
 # Logs
 logs
 *.log
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
@@ -16,11 +22,11 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
-/.nyc_output
+coverage
+.nyc_output
 
 # IDEs and editors
-/.idea
+.idea
 .project
 .classpath
 .c9/
@@ -28,21 +34,19 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# dotenv environment variable files
-# .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+# dotenv
+.env
+.env.*
+!.env.example
 
-# temp directory
+# Temp
 .temp
 .tmp
 
@@ -52,5 +56,17 @@ pids
 *.seed
 *.pid.lock
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+# Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Next.js
+.next/
+out/
+
+# NestJS
+*.tsbuildinfo
+
+# Prisma generated client
+apps/api/src/generated/
+
+settings.local.json
