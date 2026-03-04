@@ -165,7 +165,7 @@ git diff {base}...HEAD --stat
 
 | 커밋 타입 | PR 라벨 |
 |-----------|---------|
-| `feat` | `feature` |
+| `feat` | `enhancement` |
 | `refactor` | `refactoring` |
 | `fix` | `bug` |
 | `docs` | `documentation` |
@@ -174,7 +174,7 @@ git diff {base}...HEAD --stat
 
 **gh CLI 사용 시:**
 ```bash
-gh pr create --label "feature" --title "feat: ..." --body "..."
+gh pr create --label "enhancement" --title "feat: ..." --body "..."
 ```
 
 #### GitHub MCP 호출
