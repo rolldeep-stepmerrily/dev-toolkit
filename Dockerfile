@@ -15,7 +15,7 @@ COPY . .
 RUN pnpm --filter @repo/api build
 
 # Verify build output
-RUN test -f /app/apps/api/dist/main.js || (echo "ERROR: dist/main.js not found" && ls -la /app/apps/api/ && exit 1)
+RUN echo "=== dist contents ===" && find /app/apps/api/dist -name "*.js" | head -20 && test -f /app/apps/api/dist/main.js || (echo "ERROR: dist/main.js not found" && exit 1)
 
 EXPOSE 3001
 CMD ["node", "/app/apps/api/dist/main.js"]
