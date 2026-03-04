@@ -1,6 +1,6 @@
 [build]
-builder = "nixpacks"
-buildCommand = "npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter @repo/api build"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "node apps/api/dist/main.js"
