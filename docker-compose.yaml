@@ -10,11 +10,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - postgres-network
+      - local-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - local-network
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
-  postgres-network:
+  local-network:
     driver: bridge
