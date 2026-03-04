@@ -86,6 +86,7 @@ export default function IpPage() {
     setIpLoading(true);
     setIpError('');
     try {
+      if (!API_URL) throw new Error('API 서버 URL이 설정되지 않았습니다. (.env.local 확인)');
       const res = await fetch(`${API_URL}/tools/ip/me`);
       if (!res.ok) throw new Error('IP 조회 실패');
       const data = await res.json();

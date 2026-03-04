@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const hashBcrypt = async (plainText: string, saltRounds: number): Promise<string> => {
+  if (!API_URL) throw new Error('API 서버 URL이 설정되지 않았습니다. (.env.local 확인)');
   const res = await fetch(`${API_URL}/tools/bcrypt/hash`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -27,6 +28,7 @@ const hashBcrypt = async (plainText: string, saltRounds: number): Promise<string
 };
 
 const verifyBcrypt = async (plainText: string, hash: string): Promise<boolean> => {
+  if (!API_URL) throw new Error('API 서버 URL이 설정되지 않았습니다. (.env.local 확인)');
   const res = await fetch(`${API_URL}/tools/bcrypt/verify`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

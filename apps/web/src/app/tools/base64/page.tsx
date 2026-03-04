@@ -11,7 +11,8 @@ import { Textarea } from '@/components/ui/textarea';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const toBase64 = (text: string, urlSafe: boolean): string => {
-  const encoded = btoa(unescape(encodeURIComponent(text)));
+  const bytes = new TextEncoder().encode(text);
+  const encoded = btoa(Array.from(bytes, (b) => String.fromCharCode(b)).join(''));
 
   return urlSafe ? encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '') : encoded;
 };
@@ -19,8 +20,11 @@ const toBase64 = (text: string, urlSafe: boolean): string => {
 const fromBase64 = (b64: string): string => {
   try {
     const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized + '==='.slice(0, (4 - (normalized.length % 4)) % 4);
+    const binary = atob(padded);
+    const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
 
-    return decodeURIComponent(escape(atob(normalized)));
+    return new TextDecoder().decode(bytes);
   } catch {
     return '유효하지 않은 Base64 문자열';
   }

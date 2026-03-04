@@ -22,8 +22,8 @@ export class HttpLoggerMiddleware implements NestMiddleware {
     }
 
     res.on('finish', () => {
-      const userIpV4 = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      const userIpV6 = req.ips.length > 0 ? req.ips[0] : req.ip;
+      const userIpV4 = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+      const userIpV6 = req.ips.length > 0 ? req.ips[0] : (req.ip ?? 'unknown');
       const userId = req.user?.id ? ` ${req.user?.id} ` : ' ';
       const contentLength = res.getHeader('content-length') || 0;
       const referrer = req.header('Referer') || req.header('Referrer');
