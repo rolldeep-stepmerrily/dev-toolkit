@@ -1,5 +1,5 @@
 ---
-name: git-pr-convention
+name: pull-request-convention
 description: PR 생성 전 코드 리뷰를 수행하고 이슈가 없으면 PR을 생성합니다.
 triggers:
   - PR
@@ -165,7 +165,7 @@ git diff {base}...HEAD --stat
 
 | 커밋 타입 | PR 라벨 |
 |-----------|---------|
-| `feat` | `feature` |
+| `feat` | `enhancement` |
 | `refactor` | `refactoring` |
 | `fix` | `bug` |
 | `docs` | `documentation` |
@@ -174,7 +174,7 @@ git diff {base}...HEAD --stat
 
 **gh CLI 사용 시:**
 ```bash
-gh pr create --label "feature" --title "feat: ..." --body "..."
+gh pr create --label "enhancement" --title "feat: ..." --body "..."
 ```
 
 #### GitHub MCP 호출

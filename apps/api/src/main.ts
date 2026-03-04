@@ -35,6 +35,11 @@ async function bootstrap() {
 
   const port = configService.getOrThrow<number>('PORT');
 
+  app.enableCors({
+    origin: isProduction ? configService.getOrThrow<string>('SERVER_URL') : true,
+    credentials: true,
+  });
+
   if (isProduction) {
     app.use(helmet());
   } else {
@@ -51,7 +56,7 @@ async function bootstrap() {
       '/docs',
       apiReference({
         content: document,
-        metaData: { title: 'fixme' },
+        metaData: { title: 'dev-toolkit' },
         theme: 'deepSpace',
       }),
     );

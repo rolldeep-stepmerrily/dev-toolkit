@@ -1,6 +1,6 @@
 # Dev Toolkit
 
-개발자를 위한 도구 모음 웹서비스. kitd.kr과 유사한 형태.
+개발자를 위한 도구 모음 웹서비스.
 
 ## 모노레포 구조
 
@@ -26,8 +26,8 @@ dev-toolkit/
 | `code-reviewer` | `.claude/agents/code-reviewer.md` | 코드 리뷰 (코드 작성/수정 후 호출) |
 | `general-convention` | `.claude/skills/code-convention/general-convention/SKILL.md` | TS 코딩 컨벤션 |
 | `jsdoc-convention` | `.claude/skills/code-convention/jsdoc-convention/SKILL.md` | JSDoc 작성 규칙 |
-| `git-commit-convention` | `.claude/skills/git-convention/commit-convention/SKILL.md` | 커밋/브랜치 컨벤션 |
-| `git-pr-convention` | `.claude/skills/git-convention/pull-request-convention/SKILL.md` | PR 생성 워크플로우 |
+| `commit-convention` | `.claude/skills/git-convention/commit-convention/SKILL.md` | 커밋/브랜치 컨벤션 |
+| `pull-request-convention` | `.claude/skills/git-convention/pull-request-convention/SKILL.md` | PR 생성 워크플로우 |
 
 ## 패키지 매니저
 

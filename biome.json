@@ -6,7 +6,8 @@
     "defaultBranch": "main"
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "includes": ["**", "!apps/web/src/components/ui", "!apps/web/src/app/globals.css"]
   },
   "formatter": {
     "enabled": true,
@@ -112,6 +113,9 @@
     }
   },
   "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    },
     "formatter": {
       "quoteStyle": "single",
       "trailingCommas": "all",
