@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel --filter './apps/*' run dev",
+    "dev": "pnpm --parallel --filter @repo/api --filter @repo/web run dev",
     "build": "pnpm --recursive run build",
     "lint": "biome lint .",
     "check": "biome check --write .",
