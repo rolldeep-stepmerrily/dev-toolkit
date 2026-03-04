@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "pnpm --parallel --filter @repo/api --filter @repo/web run dev",
     "build": "pnpm --recursive run build",
