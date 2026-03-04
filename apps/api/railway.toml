@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install -g pnpm && pnpm install && pnpm build"
+
+[deploy]
+startCommand = "pnpm start:prod"
+restartPolicyType = "on_failure"
