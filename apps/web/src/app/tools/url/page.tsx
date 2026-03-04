@@ -94,9 +94,9 @@ export default function UrlPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {queryParams.map((p, i) => (
+                  {queryParams.map((p) => (
                     <tr
-                      key={`${i}-${p.key}=${p.value}`}
+                      key={`${p.key}=${p.value}`}
                       className="border-b last:border-0"
                     >
                       <td className="py-2 pr-4 font-mono">{p.key}</td>
