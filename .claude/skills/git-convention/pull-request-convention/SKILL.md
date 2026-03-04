@@ -1,5 +1,5 @@
 ---
-name: git-pr-convention
+name: pull-request-convention
 description: PR 생성 전 코드 리뷰를 수행하고 이슈가 없으면 PR을 생성합니다.
 triggers:
   - PR

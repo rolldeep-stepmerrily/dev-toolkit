@@ -6,6 +6,8 @@ import Joi from 'joi';
 import { AppController } from './app.controller';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
+import { BcryptModule } from './tools/bcrypt/bcrypt.module';
+import { IpModule } from './tools/ip/ip.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { PrismaModule } from './common/prisma';
       validationOptions: { abortEarly: true },
     }),
     PrismaModule,
+    BcryptModule,
+    IpModule,
   ],
   controllers: [AppController],
 })

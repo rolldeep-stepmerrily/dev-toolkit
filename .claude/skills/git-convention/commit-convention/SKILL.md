@@ -1,5 +1,5 @@
 ---
-name: git-commit-convention
+name: commit-convention
 description: Git 커밋 메시지 및 브랜치 네이밍 컨벤션. 커밋, 브랜치 생성 시 참조합니다.
 triggers:
   - 커밋
