@@ -1,5 +1,5 @@
 ---
-name: mobile-first
+name: responsive-design
 description: 프론트엔드 UI 작업 시 반응형 디자인을 적용합니다. PC를 기본으로 작성하되 모바일도 반드시 함께 고려합니다. FE 컴포넌트 작성/수정 시 항상 참고합니다.
 triggers:
   - 컴포넌트 작성

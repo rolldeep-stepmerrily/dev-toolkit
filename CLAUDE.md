@@ -28,7 +28,7 @@ dev-toolkit/
 | `jsdoc-convention` | `.claude/skills/code-convention/jsdoc-convention/SKILL.md` | JSDoc 작성 규칙 |
 | `commit-convention` | `.claude/skills/git-convention/commit-convention/SKILL.md` | 커밋/브랜치 컨벤션 |
 | `pull-request-convention` | `.claude/skills/git-convention/pull-request-convention/SKILL.md` | PR 생성 워크플로우 |
-| `mobile-first` | `.claude/skills/fe-convention/mobile-first/SKILL.md` | FE 작업 시 반응형 디자인 (PC 기본, 모바일 확장) |
+| `responsive-design` | `.claude/skills/fe-convention/responsive-design/SKILL.md` | FE 작업 시 반응형 디자인 (PC 기본, 모바일 확장) |
 
 ## 패키지 매니저
 
