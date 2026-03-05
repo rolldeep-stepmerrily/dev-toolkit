@@ -22,7 +22,7 @@ export const LayoutShell = ({ children }: LayoutShellProps): React.JSX.Element =
   const handleMenuOpen = useCallback(() => setMobileOpen(true), []);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-dvh overflow-hidden">
       {/* 모바일 백드롭 */}
       {mobileOpen && (
         <button
