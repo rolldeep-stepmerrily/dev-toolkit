@@ -14,6 +14,7 @@ import { IpModule } from './tools/ip/ip.module';
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         SERVER_URL: Joi.string().required(),
+        CLIENT_URL: Joi.string().required(),
         NODE_ENV: Joi.string().valid('local', 'development', 'production').default('development'),
         PORT: Joi.number().default(3000),
         DATABASE_URL: Joi.string().required(),

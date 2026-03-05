@@ -124,7 +124,7 @@ export default function TimestampPage() {
           <CardTitle className="text-base">타임스탬프 → 날짜</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label>Unix 타임스탬프 (초 또는 밀리초)</Label>
             <Input
               placeholder="예: 1700000000"
@@ -147,7 +147,7 @@ export default function TimestampPage() {
           <CardTitle className="text-base">날짜 → 타임스탬프</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label>날짜/시간</Label>
             <Input
               type="datetime-local"
