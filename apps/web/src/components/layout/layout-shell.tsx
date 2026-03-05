@@ -46,6 +46,18 @@ export const LayoutShell = ({ children }: LayoutShellProps): React.JSX.Element =
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header onMenuClick={handleMenuOpen} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <footer className="border-t px-4 py-3 text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()}{' '}
+          <a
+            href="https://github.com/rolldeep-stepmerrily"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline-offset-4 hover:underline"
+          >
+            rolldeep-stepmerrily
+          </a>
+          . All rights reserved.
+        </footer>
       </div>
     </div>
   );
