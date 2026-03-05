@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Binary, Clock, Code2, Globe, Key, Lock, Network, Regex } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,7 +17,18 @@ const tools = [
   { name: 'Timestamp', description: '타임스탬프 변환', href: '/tools/timestamp', icon: Clock },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+/**
+ * 사이드바 네비게이션 컴포넌트
+ * 모바일에서는 오버레이 형태로 표시되며 링크 클릭 시 닫힘 처리
+ *
+ * @param {SidebarProps} props
+ * @returns {JSX.Element}
+ */
+export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
   const pathname = usePathname();
 
   return (
@@ -25,6 +37,7 @@ export function Sidebar() {
         <Link
           href="/"
           className="flex items-center gap-2"
+          onClick={onClose}
         >
           <span className="font-bold text-sidebar-foreground">Dev Toolkit</span>
         </Link>
@@ -39,6 +52,7 @@ export function Sidebar() {
               <li key={tool.href}>
                 <Link
                   href={tool.href}
+                  onClick={onClose}
                   className={cn(
                     'flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors',
                     isActive
@@ -59,4 +73,4 @@ export function Sidebar() {
       </nav>
     </aside>
   );
-}
+};
