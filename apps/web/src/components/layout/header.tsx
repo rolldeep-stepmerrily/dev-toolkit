@@ -1,21 +1,27 @@
 'use client';
 
 import React from 'react';
-import { Menu } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { LogOut, Menu, User } from 'lucide-react';
+
+import { useAuth } from '@/contexts/auth-context';
+import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './theme-toggle';
 
 interface HeaderProps {
   onMenuClick?: () => void;
 }
 
-/**
- * 글로벌 헤더 컴포넌트
- * 모바일에서 햄버거 메뉴 버튼과 앱 타이틀을 표시
- *
- * @param {HeaderProps} props
- * @returns {JSX.Element}
- */
 export const Header = ({ onMenuClick }: HeaderProps): React.JSX.Element => {
+  const router = useRouter();
+  const { user, isLoading, logout } = useAuth();
+
+  const handleLogout = async (): Promise<void> => {
+    await logout();
+    router.push('/login');
+  };
+
   return (
     <header className="flex h-14 items-center border-b bg-background px-4">
       <button
@@ -27,8 +33,38 @@ export const Header = ({ onMenuClick }: HeaderProps): React.JSX.Element => {
         <Menu className="h-5 w-5" />
       </button>
       <span className="font-bold md:hidden">Dev Toolkit</span>
+
       <div className="flex-1" />
-      <ThemeToggle />
+
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+
+        {!isLoading &&
+          (user ? (
+            <div className="flex items-center gap-2">
+              <span className="hidden text-sm text-muted-foreground sm:block">{user.email}</span>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={handleLogout}
+                aria-label="로그아웃"
+              >
+                <LogOut />
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+            >
+              <Link href="/login">
+                <User className="mr-1.5 size-4" />
+                로그인
+              </Link>
+            </Button>
+          ))}
+      </div>
     </header>
   );
 };
