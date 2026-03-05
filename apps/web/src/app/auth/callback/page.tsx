@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { useAuth } from '@/contexts/auth-context';
 
-const AuthCallbackPage = (): React.JSX.Element => {
+const AuthCallbackInner = (): React.JSX.Element => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setTokens } = useAuth();
@@ -28,6 +28,14 @@ const AuthCallbackPage = (): React.JSX.Element => {
     <div className="flex min-h-full items-center justify-center">
       <p className="text-muted-foreground">로그인 처리 중...</p>
     </div>
+  );
+};
+
+const AuthCallbackPage = (): React.JSX.Element => {
+  return (
+    <Suspense>
+      <AuthCallbackInner />
+    </Suspense>
   );
 };
 
