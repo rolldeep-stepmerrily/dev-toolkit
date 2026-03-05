@@ -198,7 +198,7 @@ export default function RegexPage() {
           <CardTitle className="text-base">치환</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label>치환 문자열 ($1, $2로 캡처 그룹 참조)</Label>
             <Input
               placeholder="치환할 문자열"

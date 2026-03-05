@@ -46,7 +46,10 @@ export const LayoutShell = ({ children }: LayoutShellProps): React.JSX.Element =
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header onMenuClick={handleMenuOpen} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
-        <footer className="border-t px-4 py-3 text-center text-xs text-muted-foreground">
+        <footer
+          className="border-t px-4 pt-3 text-center text-xs text-muted-foreground"
+          style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
+        >
           © {new Date().getFullYear()}{' '}
           <a
             href="https://github.com/rolldeep-stepmerrily"

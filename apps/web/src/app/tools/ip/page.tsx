@@ -232,7 +232,7 @@ export default function IpPage() {
           <CardTitle className="text-base">IPv4 ↔ IPv6 변환</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label>IP 주소 (IPv4 또는 IPv6 입력)</Label>
             <Input
               placeholder="예: 192.168.1.1 또는 ::ffff:192.168.1.1"
