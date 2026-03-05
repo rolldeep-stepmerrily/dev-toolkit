@@ -25,7 +25,9 @@ export const LayoutShell = ({ children }: LayoutShellProps): JSX.Element => {
     <div className="flex h-screen overflow-hidden">
       {/* 모바일 백드롭 */}
       {mobileOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="사이드바 닫기"
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
           onClick={handleClose}
         />

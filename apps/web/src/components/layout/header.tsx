@@ -18,6 +18,7 @@ export const Header = ({ onMenuClick }: HeaderProps): JSX.Element => {
   return (
     <header className="flex h-14 items-center border-b bg-background px-4">
       <button
+        type="button"
         className="mr-3 rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground md:hidden"
         onClick={onMenuClick}
         aria-label="메뉴 열기"
