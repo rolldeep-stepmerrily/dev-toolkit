@@ -126,12 +126,12 @@ const DecodedSection = ({
           <CardTitle className="text-base">서명 검증</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <Select
               value={verifyAlg}
               onValueChange={(v) => onAlgChange(v as Algorithm)}
             >
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-full sm:w-32">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -146,7 +146,12 @@ const DecodedSection = ({
               value={verifySecret}
               onChange={(e) => onSecretChange(e.target.value)}
             />
-            <Button onClick={onVerify}>검증</Button>
+            <Button
+              onClick={onVerify}
+              className="sm:shrink-0"
+            >
+              검증
+            </Button>
           </div>
           {verifyError && <p className="text-sm text-destructive">{verifyError}</p>}
           {verifyResult !== null && !verifyError && (
@@ -180,7 +185,7 @@ export default function JwtPage() {
   const decoded = tokenInput ? tryDecode(tokenInput) : null;
   const expired = isExpired(decoded?.payload as Record<string, unknown> | null);
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (): Promise<void> => {
     setGenError('');
     setGenResult('');
     if (!genSecret) {
@@ -195,7 +200,7 @@ export default function JwtPage() {
     }
   };
 
-  const handleVerify = async () => {
+  const handleVerify = async (): Promise<void> => {
     setVerifyError('');
     setVerifyResult(null);
     if (!verifySecret) {
