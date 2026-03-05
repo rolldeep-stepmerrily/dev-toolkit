@@ -90,7 +90,7 @@ export default function IpPage() {
       const res = await fetch(`${API_URL}/tools/ip/me`);
       if (!res.ok) throw new Error('IP 조회 실패');
       const data = await res.json();
-      setMyIp(data.data);
+      setMyIp(data);
     } catch (e) {
       setIpError(e instanceof Error ? e.message : '오류 발생');
     } finally {
