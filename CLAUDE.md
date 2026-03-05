@@ -13,7 +13,7 @@ dev-toolkit/
 │   └── shared/       # FE/BE 공통 타입 및 유틸 (@repo/shared)
 ├── .claude/
 │   ├── agents/       # code-reviewer
-│   └── skills/       # code-convention, git-convention
+│   └── skills/       # code-convention, git-convention, fe-convention
 ├── biome.json        # 전체 lint/format 설정
 ├── tsconfig.json     # 베이스 TypeScript 설정
 └── pnpm-workspace.yaml
@@ -28,6 +28,7 @@ dev-toolkit/
 | `jsdoc-convention` | `.claude/skills/code-convention/jsdoc-convention/SKILL.md` | JSDoc 작성 규칙 |
 | `commit-convention` | `.claude/skills/git-convention/commit-convention/SKILL.md` | 커밋/브랜치 컨벤션 |
 | `pull-request-convention` | `.claude/skills/git-convention/pull-request-convention/SKILL.md` | PR 생성 워크플로우 |
+| `mobile-first` | `.claude/skills/fe-convention/mobile-first/SKILL.md` | FE 작업 시 반응형 디자인 (PC 기본, 모바일 확장) |
 
 ## 패키지 매니저
 
