@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: '개발자를 위한 도구 모음',
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }): JSX.Element => {
+const RootLayout = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
   return (
     <html
       lang="ko"

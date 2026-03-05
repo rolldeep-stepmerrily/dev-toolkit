@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Binary, Clock, Code2, Globe, Key, Lock, Network, Regex } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -27,7 +28,7 @@ interface SidebarProps {
  * @param {SidebarProps} props
  * @returns {JSX.Element}
  */
-export const Sidebar = ({ onClose }: SidebarProps): JSX.Element => {
+export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
   const pathname = usePathname();
 
   return (

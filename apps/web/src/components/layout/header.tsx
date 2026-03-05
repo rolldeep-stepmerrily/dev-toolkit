@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Menu } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 
@@ -14,7 +15,7 @@ interface HeaderProps {
  * @param {HeaderProps} props
  * @returns {JSX.Element}
  */
-export const Header = ({ onMenuClick }: HeaderProps): JSX.Element => {
+export const Header = ({ onMenuClick }: HeaderProps): React.JSX.Element => {
   return (
     <header className="flex h-14 items-center border-b bg-background px-4">
       <button

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
 
@@ -15,7 +15,7 @@ interface LayoutShellProps {
  * @param {LayoutShellProps} props
  * @returns {JSX.Element}
  */
-export const LayoutShell = ({ children }: LayoutShellProps): JSX.Element => {
+export const LayoutShell = ({ children }: LayoutShellProps): React.JSX.Element => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleClose = useCallback(() => setMobileOpen(false), []);
