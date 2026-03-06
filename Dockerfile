@@ -15,4 +15,4 @@ COPY . .
 RUN pnpm --filter @repo/api build
 
 EXPOSE 3001
-CMD ["sh", "-c", "pnpm --filter @repo/api exec prisma migrate deploy && node /app/apps/api/dist/src/main.js"]
+CMD ["sh", "-c", "cd /app/apps/api && pnpm exec prisma migrate deploy && node /app/apps/api/dist/src/main.js"]
