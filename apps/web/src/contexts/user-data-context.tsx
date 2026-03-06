@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { apiFetch } from '@/lib/api';
 import { useAuth } from './auth-context';
@@ -14,43 +14,41 @@ interface Profile {
   createdAt: string;
 }
 
-interface HistoryItem {
-  toolId: string;
-  usedAt: string;
-}
-
 interface UserDataContextValue {
   profile: Profile | null;
   bookmarks: string[];
-  history: HistoryItem[];
   isLoading: boolean;
   toggleBookmark: (toolId: string) => Promise<void>;
-  recordHistory: (toolId: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
 
 const UserDataContext = createContext<UserDataContextValue | null>(null);
 
 export const UserDataProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
-  const { user, accessToken } = useAuth();
+  const { user, getValidToken } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
-  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchUserData = useCallback(async (token: string): Promise<void> => {
+  // ref로 최신 getValidToken 유지 (fetchUserData를 안정적으로 유지하기 위함)
+  const getValidTokenRef = useRef(getValidToken);
+  getValidTokenRef.current = getValidToken;
+
+  const fetchUserData = useCallback(async (): Promise<void> => {
     setIsLoading(true);
 
     try {
-      const [profileData, bookmarksData, historyData] = await Promise.all([
+      const token = await getValidTokenRef.current();
+
+      if (!token) return;
+
+      const [profileData, bookmarksData] = await Promise.all([
         apiFetch<Profile>('/users/me', { token }),
         apiFetch<string[]>('/users/me/bookmarks', { token }),
-        apiFetch<HistoryItem[]>('/users/me/history', { token }),
       ]);
 
       setProfile(profileData);
       setBookmarks(bookmarksData);
-      setHistory(historyData);
     } catch {
       // 인증 실패 등의 에러는 무시
     } finally {
@@ -59,59 +57,41 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }): R
   }, []);
 
   useEffect(() => {
-    if (user && accessToken) {
-      fetchUserData(accessToken);
+    if (user) {
+      fetchUserData();
     } else {
       setProfile(null);
       setBookmarks([]);
-      setHistory([]);
     }
-  }, [user, accessToken, fetchUserData]);
+  }, [user, fetchUserData]);
 
   const toggleBookmark = useCallback(
     async (toolId: string): Promise<void> => {
-      if (!accessToken) return;
+      const token = await getValidToken();
+
+      if (!token) return;
 
       const updated = await apiFetch<string[]>(`/users/me/bookmarks/${toolId}`, {
         method: 'POST',
-        token: accessToken,
+        token,
       });
 
       setBookmarks(updated);
     },
-    [accessToken],
-  );
-
-  const recordHistory = useCallback(
-    async (toolId: string): Promise<void> => {
-      if (!accessToken) return;
-
-      try {
-        await apiFetch(`/users/me/history/${toolId}`, {
-          method: 'POST',
-          token: accessToken,
-        });
-
-        setHistory((prev) => {
-          const filtered = prev.filter((h) => h.toolId !== toolId);
-          return [{ toolId, usedAt: new Date().toISOString() }, ...filtered].slice(0, 10);
-        });
-      } catch {
-        // 히스토리 기록 실패는 무시
-      }
-    },
-    [accessToken],
+    [getValidToken],
   );
 
   const refreshProfile = useCallback(async (): Promise<void> => {
-    if (!accessToken) return;
+    const token = await getValidToken();
 
-    const updated = await apiFetch<Profile>('/users/me', { token: accessToken });
+    if (!token) return;
+
+    const updated = await apiFetch<Profile>('/users/me', { token });
     setProfile(updated);
-  }, [accessToken]);
+  }, [getValidToken]);
 
   return (
-    <UserDataContext.Provider value={{ profile, bookmarks, history, isLoading, toggleBookmark, recordHistory, refreshProfile }}>
+    <UserDataContext.Provider value={{ profile, bookmarks, isLoading, toggleBookmark, refreshProfile }}>
       {children}
     </UserDataContext.Provider>
   );
