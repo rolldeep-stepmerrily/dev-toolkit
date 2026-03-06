@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Binary, Clock, Code2, Globe, Key, Lock, Network, Regex, Star } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -46,7 +46,7 @@ const ToolItem = ({ tool, isActive, isBookmarked, isLoggedIn, onBookmark, onClos
   const Icon = tool.icon;
 
   return (
-    <li key={tool.href} className="group relative">
+    <li className="group relative">
       <Link
         href={tool.href}
         onClick={onClose}
@@ -85,7 +85,7 @@ const ToolItem = ({ tool, isActive, isBookmarked, isLoggedIn, onBookmark, onClos
 
 /**
  * 사이드바 네비게이션 컴포넌트
- * 로그인 시 북마크/히스토리 섹션 표시, 도구별 북마크 토글 제공
+ * 로그인 시 즐겨찾기 섹션 및 도구별 북마크 토글 버튼 표시
  *
  * @param {SidebarProps} props
  * @returns {JSX.Element}
@@ -93,22 +93,9 @@ const ToolItem = ({ tool, isActive, isBookmarked, isLoggedIn, onBookmark, onClos
 export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
   const pathname = usePathname();
   const { user } = useAuth();
-  const { bookmarks, history, toggleBookmark, recordHistory } = useUserData();
-
-  const recordedRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    const match = pathname.match(/^\/tools\/([^/]+)/);
-    const toolId = match?.[1];
-
-    if (toolId && user && recordedRef.current !== pathname) {
-      recordedRef.current = pathname;
-      recordHistory(toolId);
-    }
-  }, [pathname, user, recordHistory]);
+  const { bookmarks, toggleBookmark } = useUserData();
 
   const bookmarkedTools = bookmarks.map((id) => toolById[id]).filter(Boolean);
-  const recentTools = history.map((h) => toolById[h.toolId]).filter(Boolean).slice(0, 5);
 
   return (
     <aside className="flex h-full w-56 flex-col border-r bg-sidebar">
@@ -156,26 +143,6 @@ export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
             ))}
           </ul>
         </div>
-
-        {/* 최근 사용 */}
-        {user && recentTools.length > 0 && (
-          <div>
-            <p className="mb-1 px-2 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">최근 사용</p>
-            <ul className="space-y-0.5">
-              {recentTools.map((tool) => (
-                <ToolItem
-                  key={tool.id}
-                  tool={tool}
-                  isActive={pathname === tool.href}
-                  isBookmarked={bookmarks.includes(tool.id)}
-                  isLoggedIn={true}
-                  onBookmark={toggleBookmark}
-                  onClose={onClose}
-                />
-              ))}
-            </ul>
-          </div>
-        )}
       </nav>
     </aside>
   );

@@ -14,7 +14,7 @@ import { ApiError, apiFetch } from '@/lib/api';
 
 export default function ProfilePage(): React.JSX.Element {
   const router = useRouter();
-  const { user, accessToken } = useAuth();
+  const { user, getValidToken } = useAuth();
   const { profile, refreshProfile } = useUserData();
 
   const [name, setName] = useState('');
@@ -42,7 +42,9 @@ export default function ProfilePage(): React.JSX.Element {
   }, [profile]);
 
   const handleProfileSave = async (): Promise<void> => {
-    if (!accessToken) return;
+    const token = await getValidToken();
+
+    if (!token) return;
 
     setProfileSaving(true);
     setProfileMessage(null);
@@ -50,7 +52,7 @@ export default function ProfilePage(): React.JSX.Element {
     try {
       await apiFetch('/users/me', {
         method: 'PATCH',
-        token: accessToken,
+        token,
         body: JSON.stringify({
           name: name.trim() || null,
           avatarUrl: avatarUrl.trim() || null,
@@ -68,8 +70,6 @@ export default function ProfilePage(): React.JSX.Element {
   };
 
   const handlePasswordChange = async (): Promise<void> => {
-    if (!accessToken) return;
-
     if (newPassword !== confirmPassword) {
       setPasswordMessage({ type: 'error', text: '새 비밀번호가 일치하지 않습니다' });
       return;
@@ -80,13 +80,17 @@ export default function ProfilePage(): React.JSX.Element {
       return;
     }
 
+    const token = await getValidToken();
+
+    if (!token) return;
+
     setPasswordSaving(true);
     setPasswordMessage(null);
 
     try {
       await apiFetch('/users/me/password', {
         method: 'POST',
-        token: accessToken,
+        token,
         body: JSON.stringify({ currentPassword, newPassword }),
       });
 

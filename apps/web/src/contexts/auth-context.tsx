@@ -17,6 +17,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   setTokens: (accessToken: string, refreshToken: string) => void;
+  getValidToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -37,6 +38,23 @@ const decodeUser = (token: string): AuthUser | null => {
     return { id: Number(payload.sub), email: payload.email as string };
   } catch {
     return null;
+  }
+};
+
+/**
+ * 액세스 토큰이 만료됐는지 확인 (30초 버퍼 포함)
+ *
+ * @param {string} token JWT 액세스 토큰
+ * @returns {boolean} 만료 여부
+ */
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = decodeJwt(token);
+    const exp = payload.exp as number | undefined;
+
+    return !exp || exp * 1000 < Date.now() + 30_000;
+  } catch {
+    return true;
   }
 };
 
@@ -63,14 +81,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): React
     setUser(decodeUser(access));
   }, []);
 
-  const login = useCallback(async (email: string, password: string): Promise<void> => {
-    const data = await apiFetch<{ accessToken: string; refreshToken: string }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
-    setTokens(data.accessToken, data.refreshToken);
-  }, [setTokens]);
-
   const logout = useCallback(async (): Promise<void> => {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
@@ -93,8 +103,54 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): React
     setUser(null);
   }, []);
 
+  /**
+   * 유효한 액세스 토큰을 반환. 만료된 경우 리프레시 토큰으로 자동 갱신.
+   * 갱신 실패 시 로그아웃 처리 후 null 반환.
+   *
+   * @returns {Promise<string | null>} 유효한 액세스 토큰 또는 null
+   */
+  const getValidToken = useCallback(async (): Promise<string | null> => {
+    const currentToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+    if (!currentToken) return null;
+
+    if (!isTokenExpired(currentToken)) return currentToken;
+
+    const storedRefreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+
+    if (!storedRefreshToken) {
+      await logout();
+      return null;
+    }
+
+    try {
+      const data = await apiFetch<{ accessToken: string; refreshToken: string }>('/auth/refresh', {
+        method: 'POST',
+        token: storedRefreshToken,
+      });
+
+      setTokens(data.accessToken, data.refreshToken);
+      return data.accessToken;
+    } catch {
+      await logout();
+      return null;
+    }
+  }, [logout, setTokens]);
+
+  const login = useCallback(
+    async (email: string, password: string): Promise<void> => {
+      const data = await apiFetch<{ accessToken: string; refreshToken: string }>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+
+      setTokens(data.accessToken, data.refreshToken);
+    },
+    [setTokens],
+  );
+
   return (
-    <AuthContext.Provider value={{ user, accessToken, isLoading, login, logout, setTokens }}>
+    <AuthContext.Provider value={{ user, accessToken, isLoading, login, logout, setTokens, getValidToken }}>
       {children}
     </AuthContext.Provider>
   );
