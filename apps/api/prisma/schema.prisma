@@ -19,6 +19,8 @@ model User {
 
   oauthAccounts OAuthAccount[]
   refreshTokens RefreshToken[]
+  bookmarks     Bookmark[]
+  toolHistories ToolHistory[]
 }
 
 model OAuthAccount {
@@ -43,4 +45,26 @@ model RefreshToken {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  toolId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+}
+
+model ToolHistory {
+  id     Int      @id @default(autoincrement())
+  userId Int
+  toolId String
+  usedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
 }

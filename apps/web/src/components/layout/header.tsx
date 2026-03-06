@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LogOut, Menu, User } from 'lucide-react';
+import { LogOut, Menu, Settings, User } from 'lucide-react';
 
 import { useAuth } from '@/contexts/auth-context';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,11 @@ export const Header = ({ onMenuClick }: HeaderProps): React.JSX.Element => {
           (user ? (
             <div className="flex items-center gap-2">
               <span className="hidden text-sm text-muted-foreground sm:block">{user.email}</span>
+              <Button variant="ghost" size="icon-sm" asChild aria-label="프로필 설정">
+                <Link href="/profile">
+                  <Settings />
+                </Link>
+              </Button>
               <Button
                 variant="ghost"
                 size="icon-sm"

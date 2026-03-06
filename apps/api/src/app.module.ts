@@ -9,6 +9,7 @@ import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
 import { BcryptModule } from './tools/bcrypt/bcrypt.module';
 import { IpModule } from './tools/ip/ip.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { IpModule } from './tools/ip/ip.module';
     AuthModule,
     BcryptModule,
     IpModule,
+    UsersModule,
   ],
   controllers: [AppController],
 })
