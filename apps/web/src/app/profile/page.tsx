@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -101,7 +102,7 @@ export default function ProfilePage(): React.JSX.Element {
     }
   };
 
-  if (!user || !profile) {
+  if (!(user && profile)) {
     return <div className="flex items-center justify-center h-40 text-muted-foreground">로딩 중...</div>;
   }
 
@@ -117,7 +118,7 @@ export default function ProfilePage(): React.JSX.Element {
         <div className="flex items-center gap-4">
           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-muted">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="avatar" className="h-full w-full object-cover" />
+              <Image src={avatarUrl} alt="avatar" fill unoptimized className="object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-muted-foreground">
                 {(profile.name ?? profile.email)[0]?.toUpperCase()}

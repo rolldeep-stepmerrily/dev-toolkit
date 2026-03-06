@@ -73,18 +73,19 @@ export class UsersService {
    */
   async changePassword(userId: number, dto: ChangePasswordDto): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const currentHash = user?.password;
 
-    if (!isDefined(user?.password)) {
+    if (!isDefined(currentHash)) {
       throw new AppException(USERS_ERRORS.NO_PASSWORD);
     }
 
-    const isMatch = await bcrypt.compare(dto.currentPassword, user.password!);
+    const isMatch = await bcrypt.compare(dto.currentPassword, currentHash);
 
     if (!isMatch) {
       throw new AppException(USERS_ERRORS.WRONG_PASSWORD);
     }
 
-    const isSame = await bcrypt.compare(dto.newPassword, user.password!);
+    const isSame = await bcrypt.compare(dto.newPassword, currentHash);
 
     if (isSame) {
       throw new AppException(USERS_ERRORS.PASSWORD_SAME);
