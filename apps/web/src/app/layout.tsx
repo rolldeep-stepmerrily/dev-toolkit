@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { AuthProvider } from '@/contexts/auth-context';
+import { UserDataProvider } from '@/contexts/user-data-context';
 import { LayoutShell } from '@/components/layout/layout-shell';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -26,9 +27,11 @@ const RootLayout = ({ children }: { children: React.ReactNode }): React.JSX.Elem
       <body suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider>
-            <TooltipProvider>
-              <LayoutShell>{children}</LayoutShell>
-            </TooltipProvider>
+            <UserDataProvider>
+              <TooltipProvider>
+                <LayoutShell>{children}</LayoutShell>
+              </TooltipProvider>
+            </UserDataProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
