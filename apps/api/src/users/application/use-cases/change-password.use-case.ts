@@ -23,7 +23,7 @@ export class ChangePasswordUseCase {
     const user = await this.getUser(userId);
 
     await this.verifyCurrentPassword(currentPassword, user.password);
-    await this.checkPasswordNotSame(newPassword, user.password!);
+    await this.checkPasswordNotSame(newPassword, user.password);
 
     const hashedPassword = await this.hashPassword(newPassword);
 

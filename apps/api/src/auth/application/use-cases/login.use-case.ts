@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: @nestjs/jwt v11 expiresIn 타입이 ms의 StringValue를 요구하나 string과 호환되지 않는 라이브러리 타입 이슈 */
 import { AppException } from '@@exceptions';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

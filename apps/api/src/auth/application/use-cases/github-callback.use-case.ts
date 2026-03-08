@@ -14,7 +14,7 @@ export class GithubCallbackUseCase {
     private readonly configService: ConfigService,
   ) {}
 
-  async execute(props: GithubCallbackUseCaseProps): Promise<GithubCallbackResult> {
+  execute(props: GithubCallbackUseCaseProps): Promise<GithubCallbackResult> {
     const { userId, email } = props;
 
     return this.issueTokens(userId, email);

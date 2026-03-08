@@ -6,7 +6,7 @@ import { GetBookmarksQuery } from '../queries/get-bookmarks.query';
 export class GetBookmarksUseCase {
   constructor(private readonly queryBus: TypedQueryBus<GetBookmarksQuery>) {}
 
-  async execute(props: GetBookmarksUseCaseProps): Promise<string[]> {
+  execute(props: GetBookmarksUseCaseProps): Promise<string[]> {
     const { userId } = props;
 
     return this.getBookmarks(userId);
