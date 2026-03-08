@@ -1,7 +1,6 @@
+import { BaseEntity } from '@@entities';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
-
-import { BaseEntity } from '@@entities';
 
 export class UserEntity extends BaseEntity {
   @ApiProperty()
@@ -21,4 +20,9 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   @IsString()
   avatarUrl!: string | null;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  password!: string | null;
 }

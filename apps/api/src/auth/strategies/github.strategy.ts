@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-github2';
+import { UserEntity } from 'src/users/entities/user.entity';
 
-import { AuthService } from '../auth.service';
+import { FindOrCreateGithubUserUseCase } from '../application/use-cases/find-or-create-github-user.use-case';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
     configService: ConfigService,
-    private readonly authService: AuthService,
+    private readonly findOrCreateGithubUserUseCase: FindOrCreateGithubUserUseCase,
   ) {
     super({
       clientID: configService.getOrThrow<string>('GITHUB_CLIENT_ID'),
@@ -27,7 +28,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
    * @param {Profile} profile GitHub OAuth 프로필
    * @returns {Promise<object>} 조회 또는 생성된 사용자 정보
    */
-  validate(accessToken: string, _refreshToken: string, profile: Profile): Promise<object> {
-    return this.authService.findOrCreateGithubUser(profile, accessToken);
+  validate(accessToken: string, _refreshToken: string, profile: Profile): Promise<UserEntity> {
+    return this.findOrCreateGithubUserUseCase.execute({ profile, accessToken });
   }
 }
