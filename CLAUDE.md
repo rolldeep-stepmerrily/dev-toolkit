@@ -29,6 +29,12 @@ dev-toolkit/
 | `commit-convention` | `.claude/skills/git-convention/commit-convention/SKILL.md` | 커밋/브랜치 컨벤션 |
 | `pull-request-convention` | `.claude/skills/git-convention/pull-request-convention/SKILL.md` | PR 생성 워크플로우 |
 | `responsive-design` | `.claude/skills/fe-convention/responsive-design/SKILL.md` | FE 작업 시 반응형 디자인 (PC 기본, 모바일 확장) |
+| `nestjs-cqrs` | `.claude/skills/be-convention/nestjs-cqrs/SKILL.md` | NestJS CQRS + UseCase 아키텍처 패턴 |
+
+## Git 브랜치 전략
+
+- **PR base 브랜치**: 항상 `develop` (핫픽스/릴리스만 `main`)
+- 일반 기능 개발/버그 수정은 `develop`으로 PR
 
 ## 패키지 매니저
 

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
 
 // DATABASE_URL은 migrate/push/studio 등 DB 연결이 필요한 명령에서만 필수.
@@ -8,6 +9,6 @@ export default defineConfig({
     path: 'prisma/migrations',
   },
   datasource: {
-    url: process.env.DATABASE_URL ?? '',
+    url: process.env.DATABASE_URL,
   },
 });
