@@ -136,8 +136,6 @@ git diff main...HEAD --stat
 - [ ] 주요 기능 동작 확인
 - [ ] lint 통과
 - [ ] build 통과
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 ```
 
 ### 4-5. base 브랜치 선택
