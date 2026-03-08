@@ -12,14 +12,14 @@ import { LoginUseCase } from './application/use-cases/login.use-case';
 import { LogoutUseCase } from './application/use-cases/logout.use-case';
 import { RefreshUseCase } from './application/use-cases/refresh.use-case';
 import { SignUpUseCase } from './application/use-cases/sign-up.use-case';
-import { AuthController } from './presenter/http/auth.http.controller';
+import { AuthHttpController } from './presenter/http/auth.http.controller';
 import { GithubStrategy } from './strategies/github.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   imports: [PassportModule, JwtModule.register({})],
-  controllers: [AuthController],
+  controllers: [AuthHttpController],
   providers: [
     JwtStrategy,
     JwtRefreshStrategy,

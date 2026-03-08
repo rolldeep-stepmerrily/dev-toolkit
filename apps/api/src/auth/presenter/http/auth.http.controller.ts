@@ -19,7 +19,7 @@ import { SignUpRequestBodyDto, SignUpResponseDataDto } from './dto/signup.dto';
 
 @Controller(AuthRouter.Root)
 @ApiTags(AuthRouter.HttpApiTags)
-export class AuthController {
+export class AuthHttpController {
   constructor(
     private readonly configService: ConfigService,
     private readonly signUpUseCase: SignUpUseCase,

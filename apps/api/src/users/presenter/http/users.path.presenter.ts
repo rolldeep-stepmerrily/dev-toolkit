@@ -7,7 +7,5 @@ export const UsersRouter = {
     ChangePassword: 'me/password',
     GetBookmarks: 'me/bookmarks',
     ToggleBookmark: 'me/bookmarks/:toolId',
-    GetHistory: 'me/history',
-    RecordHistory: 'me/history/:toolId',
   },
 } as const;

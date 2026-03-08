@@ -4,12 +4,9 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ChangePasswordUseCase } from 'src/users/application/use-cases/change-password.use-case';
 import { GetBookmarksUseCase } from 'src/users/application/use-cases/get-bookmarks.use-case';
-import { GetHistoryUseCase } from 'src/users/application/use-cases/get-history.use-case';
 import { GetMeUseCase } from 'src/users/application/use-cases/get-me.use-case';
-import { RecordHistoryUseCase } from 'src/users/application/use-cases/record-history.use-case';
 import { ToggleBookmarkUseCase } from 'src/users/application/use-cases/toggle-bookmark.use-case';
 import { UpdateProfileUseCase } from 'src/users/application/use-cases/update-profile.use-case';
-import { HistoryEntity } from 'src/users/entities/history.entity';
 import { ProfileEntity } from 'src/users/entities/profile.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -19,15 +16,13 @@ import { UsersRouter } from './users.path.presenter';
 @ApiBearerAuth('accessToken')
 @UseGuards(JwtAuthGuard)
 @Controller(UsersRouter.Root)
-export class UsersController {
+export class UsersHttpController {
   constructor(
     private readonly getMeUseCase: GetMeUseCase,
     private readonly updateProfileUseCase: UpdateProfileUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly getBookmarksUseCase: GetBookmarksUseCase,
     private readonly toggleBookmarkUseCase: ToggleBookmarkUseCase,
-    private readonly getHistoryUseCase: GetHistoryUseCase,
-    private readonly recordHistoryUseCase: RecordHistoryUseCase,
   ) {}
 
   @ApiOperation({ summary: '내 프로필 조회' })
@@ -60,18 +55,5 @@ export class UsersController {
   @Post(UsersRouter.Http.ToggleBookmark)
   async toggleBookmark(@User() user: { id: number }, @Param('toolId') toolId: string): Promise<string[]> {
     return await this.toggleBookmarkUseCase.execute({ userId: user.id, toolId });
-  }
-
-  @ApiOperation({ summary: '히스토리 조회' })
-  @Get(UsersRouter.Http.GetHistory)
-  async getHistory(@User() user: { id: number }): Promise<HistoryEntity[]> {
-    return await this.getHistoryUseCase.execute({ userId: user.id });
-  }
-
-  @ApiOperation({ summary: '도구 사용 기록' })
-  @HttpCode(HttpStatus.OK)
-  @Post(UsersRouter.Http.RecordHistory)
-  async recordHistory(@User() user: { id: number }, @Param('toolId') toolId: string): Promise<void> {
-    await this.recordHistoryUseCase.execute({ userId: user.id, toolId });
   }
 }
