@@ -303,7 +303,26 @@ throw new AppException(TOOL_ERRORS.NOT_FOUND);
 
 ## 8. DTO 패턴
 
+**엔드포인트 1개 = DTO 파일 1개** — Request와 Response DTO를 같은 파일에 작성합니다.
+
+```
+presenter/http/dto/
+├── create-tool.dto.ts    # CreateToolRequestDto + CreateToolResponseDto
+├── get-tool.dto.ts       # GetToolResponseDto (요청 DTO 없으면 응답만)
+└── delete-tool.dto.ts    # (응답 DTO만 있거나 없으면 파일 생략 가능)
+```
+
 ```typescript
+// src/<feature>/presenter/http/dto/<action>.dto.ts
+
+// 요청 DTO - class-validator 데코레이터
+export class CreateToolRequestDto {
+  @ApiProperty()
+  @IsString()
+  @MaxLength(50)
+  name!: string;
+}
+
 // 응답 DTO - static from() 팩토리 메서드 사용
 export class CreateToolResponseDto {
   @ApiProperty()
@@ -315,14 +334,6 @@ export class CreateToolResponseDto {
   static from(data: CreateToolResponseDto): CreateToolResponseDto {
     return { id: data.id, name: data.name };
   }
-}
-
-// 요청 DTO - class-validator 데코레이터
-export class CreateToolRequestDto {
-  @ApiProperty()
-  @IsString()
-  @MaxLength(50)
-  name!: string;
 }
 ```
 
