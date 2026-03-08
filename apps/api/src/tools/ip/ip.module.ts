@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { IpController } from './ip.controller';
-import { IpService } from './ip.service';
+import { GetMyIpUseCase } from './application/use-cases/get-my-ip.use-case';
+import { IpHttpController } from './presenter/http/ip.http.controller';
 
 @Module({
-  controllers: [IpController],
-  providers: [IpService],
+  controllers: [IpHttpController],
+  providers: [
+    /** use-cases */
+    GetMyIpUseCase,
+  ],
 })
 export class IpModule {}
