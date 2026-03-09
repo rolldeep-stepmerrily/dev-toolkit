@@ -4,6 +4,7 @@ export const UsersRouter = {
   Http: {
     GetMe: 'me',
     UpdateProfile: 'me',
+    GetAvatarPresignedUrl: 'me/avatar/presigned',
     ChangePassword: 'me/password',
     GetBookmarks: 'me/bookmarks',
     ToggleBookmark: 'me/bookmarks/:toolId',

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
+import { S3Module } from './common/s3';
 import { BcryptModule } from './tools/bcrypt/bcrypt.module';
 import { IpModule } from './tools/ip/ip.module';
 import { UsersModule } from './users/users.module';
@@ -33,6 +34,11 @@ import { UsersModule } from './users/users.module';
         GITHUB_CLIENT_ID: Joi.string().required(),
         GITHUB_CLIENT_SECRET: Joi.string().required(),
         GITHUB_CALLBACK_URL: Joi.string().required(),
+        MINIO_ENDPOINT: Joi.string().required(),
+        MINIO_ACCESS_KEY: Joi.string().required(),
+        MINIO_SECRET_KEY: Joi.string().required(),
+        MINIO_BUCKET_NAME: Joi.string().required(),
+        MINIO_PUBLIC_URL: Joi.string().required(),
       }),
       isGlobal: true,
       envFilePath: '.env',
@@ -40,6 +46,7 @@ import { UsersModule } from './users/users.module';
     }),
     GlobalCqrsModule,
     PrismaModule,
+    S3Module,
     AuthModule,
     BcryptModule,
     IpModule,
