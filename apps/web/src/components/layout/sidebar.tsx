@@ -1,7 +1,24 @@
 'use client';
 
 import React from 'react';
-import { Binary, Clock, Code2, Globe, Key, Lock, Network, Regex, Star } from 'lucide-react';
+import {
+  Binary,
+  Clock,
+  Code2,
+  FileCode2,
+  Fingerprint,
+  GitCompareArrows,
+  Globe,
+  Hash,
+  Key,
+  Lock,
+  Network,
+  Palette,
+  QrCode,
+  Regex,
+  Star,
+  Timer,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -18,6 +35,13 @@ const tools = [
   { id: 'regex', name: 'Regex', description: '정규식 테스터', href: '/tools/regex', icon: Regex },
   { id: 'ip', name: 'IP', description: 'IP 주소 확인기', href: '/tools/ip', icon: Network },
   { id: 'timestamp', name: 'Timestamp', description: '타임스탬프 변환', href: '/tools/timestamp', icon: Clock },
+  { id: 'uuid', name: 'UUID', description: 'UUID 생성기', href: '/tools/uuid', icon: Fingerprint },
+  { id: 'hash', name: 'Hash', description: 'MD5/SHA 해시 생성', href: '/tools/hash', icon: Hash },
+  { id: 'color', name: 'Color', description: 'HEX/RGB/HSL 변환', href: '/tools/color', icon: Palette },
+  { id: 'cron', name: 'Cron', description: 'Cron 표현식 파서', href: '/tools/cron', icon: Timer },
+  { id: 'yaml', name: 'YAML', description: 'YAML ↔ JSON 변환', href: '/tools/yaml', icon: FileCode2 },
+  { id: 'diff', name: 'Diff', description: '텍스트 차이 비교', href: '/tools/diff', icon: GitCompareArrows },
+  { id: 'qr', name: 'QR Code', description: 'QR 코드 생성기', href: '/tools/qr', icon: QrCode },
 ];
 
 const toolById = Object.fromEntries(tools.map((t) => [t.id, t]));
@@ -40,7 +64,7 @@ interface ToolItemProps {
  * 로그인 시 hover 상태에서 북마크 토글 버튼 표시
  *
  * @param {ToolItemProps} props
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 const ToolItem = ({ tool, isActive, isBookmarked, isLoggedIn, onBookmark, onClose }: ToolItemProps): React.JSX.Element => {
   const Icon = tool.icon;
@@ -88,7 +112,7 @@ const ToolItem = ({ tool, isActive, isBookmarked, isLoggedIn, onBookmark, onClos
  * 로그인 시 즐겨찾기 섹션 및 도구별 북마크 토글 버튼 표시
  *
  * @param {SidebarProps} props
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
   const pathname = usePathname();
