@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { GlobalCqrsModule } from 'src/common/cqrs';
 import { CreateBookmarkCommandHandler } from './application/commands/create-bookmark.command';
 import { DeleteBookmarkCommandHandler } from './application/commands/delete-bookmark.command';
 import { SaveGithubUserCommandHandler } from './application/commands/save-github-user.command';
@@ -18,7 +17,6 @@ import { UpdateProfileUseCase } from './application/use-cases/update-profile.use
 import { UsersHttpController } from './presenter/http/users.http.controller';
 
 @Module({
-  imports: [GlobalCqrsModule],
   controllers: [UsersHttpController],
   providers: [
     /** query-handlers */

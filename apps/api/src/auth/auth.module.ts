@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { GlobalCqrsModule } from 'src/common/cqrs';
 import { CreateOAuthAccountCommandHandler } from './application/command/create-oauth-account.command';
 import { DeleteRefreshTokenCommandHandler } from './application/command/delete-refresh-token.command';
 import { SaveRefreshTokenCommandHandler } from './application/command/save-refresh-token.command';
@@ -19,7 +18,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
-  imports: [GlobalCqrsModule, PassportModule, JwtModule.register({})],
+  imports: [PassportModule, JwtModule.register({})],
   controllers: [AuthHttpController],
   providers: [
     JwtStrategy,
