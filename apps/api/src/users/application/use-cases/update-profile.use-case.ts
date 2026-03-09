@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { TypedCommandBus } from 'src/common/cqrs';
-import { UpdateProfileDto } from 'src/users/presenter/http/dto/update-profile.dto';
 import { ProfileEntity } from 'src/users/entities/profile.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { UpdateProfileDto } from 'src/users/presenter/http/dto/update-profile.dto';
 import { UpdateUserProfileCommand } from '../commands/update-user-profile.command';
 
 @Injectable()

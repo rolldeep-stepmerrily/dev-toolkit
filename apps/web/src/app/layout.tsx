@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { AuthProvider } from '@/contexts/auth-context';
-import { UserDataProvider } from '@/contexts/user-data-context';
 import { LayoutShell } from '@/components/layout/layout-shell';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { AuthProvider } from '@/contexts/auth-context';
+import { UserDataProvider } from '@/contexts/user-data-context';
 import './globals.css';
 
 export const metadata: Metadata = {

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import {
   Binary,
   Clock,
@@ -21,6 +20,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 
 import { useAuth } from '@/contexts/auth-context';
 import { useUserData } from '@/contexts/user-data-context';
@@ -66,7 +66,14 @@ interface ToolItemProps {
  * @param {ToolItemProps} props
  * @returns {React.JSX.Element}
  */
-const ToolItem = ({ tool, isActive, isBookmarked, isLoggedIn, onBookmark, onClose }: ToolItemProps): React.JSX.Element => {
+const ToolItem = ({
+  tool,
+  isActive,
+  isBookmarked,
+  isLoggedIn,
+  onBookmark,
+  onClose,
+}: ToolItemProps): React.JSX.Element => {
   const Icon = tool.icon;
 
   return (
@@ -124,7 +131,11 @@ export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
   return (
     <aside className="flex h-full w-56 flex-col border-r bg-sidebar">
       <div className="flex h-14 items-center border-b px-4">
-        <Link href="/" className="flex items-center gap-2" onClick={onClose}>
+        <Link
+          href="/"
+          className="flex items-center gap-2"
+          onClick={onClose}
+        >
           <span className="font-bold text-sidebar-foreground">Dev Toolkit</span>
         </Link>
       </div>
@@ -133,7 +144,9 @@ export const Sidebar = ({ onClose }: SidebarProps): React.JSX.Element => {
         {/* 즐겨찾기 */}
         {user && bookmarkedTools.length > 0 && (
           <div>
-            <p className="mb-1 px-2 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">즐겨찾기</p>
+            <p className="mb-1 px-2 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              즐겨찾기
+            </p>
             <ul className="space-y-0.5">
               {bookmarkedTools.map((tool) => (
                 <ToolItem
