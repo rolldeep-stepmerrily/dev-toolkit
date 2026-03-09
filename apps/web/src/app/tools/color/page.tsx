@@ -6,31 +6,31 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-interface RGB {
+interface Rgb {
   r: number;
   g: number;
   b: number;
 }
 
-interface HSL {
+interface Hsl {
   h: number;
   s: number;
   l: number;
 }
 
-const hexToRgb = (hex: string): RGB | null => {
+const hexToRgb = (hex: string): Rgb | null => {
   const clean = hex.replace('#', '');
   if (!/^[0-9a-fA-F]{6}$/.test(clean)) return null;
   return {
-    r: parseInt(clean.slice(0, 2), 16),
-    g: parseInt(clean.slice(2, 4), 16),
-    b: parseInt(clean.slice(4, 6), 16),
+    r: Number.parseInt(clean.slice(0, 2), 16),
+    g: Number.parseInt(clean.slice(2, 4), 16),
+    b: Number.parseInt(clean.slice(4, 6), 16),
   };
 };
 
-const rgbToHex = ({ r, g, b }: RGB): string => `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+const rgbToHex = ({ r, g, b }: Rgb): string => `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 
-const rgbToHsl = ({ r, g, b }: RGB): HSL => {
+const rgbToHsl = ({ r, g, b }: Rgb): Hsl => {
   const rn = r / 255;
   const gn = g / 255;
   const bn = b / 255;
@@ -53,6 +53,8 @@ const rgbToHsl = ({ r, g, b }: RGB): HSL => {
       case bn:
         h = ((rn - gn) / d + 4) / 6;
         break;
+      default:
+        break;
     }
   }
 
@@ -63,7 +65,7 @@ const rgbToHsl = ({ r, g, b }: RGB): HSL => {
   };
 };
 
-const hslToRgb = ({ h, s, l }: HSL): RGB => {
+const hslToRgb = ({ h, s, l }: Hsl): Rgb => {
   const sn = s / 100;
   const ln = l / 100;
 
@@ -106,11 +108,11 @@ const clamp = (v: number, min: number, max: number): number => Math.max(min, Mat
 
 export default function ColorPage() {
   const [hex, setHex] = useState('#3b82f6');
-  const [rgb, setRgb] = useState<RGB>({ r: 59, g: 130, b: 246 });
-  const [hsl, setHsl] = useState<HSL>({ h: 217, s: 91, l: 60 });
+  const [rgb, setRgb] = useState<Rgb>({ r: 59, g: 130, b: 246 });
+  const [hsl, setHsl] = useState<Hsl>({ h: 217, s: 91, l: 60 });
   const [hexError, setHexError] = useState('');
 
-  const applyFromRgb = (newRgb: RGB): void => {
+  const applyFromRgb = (newRgb: Rgb): void => {
     setRgb(newRgb);
     setHex(rgbToHex(newRgb));
     setHsl(rgbToHsl(newRgb));
@@ -129,8 +131,8 @@ export default function ColorPage() {
     }
   };
 
-  const handleHslChange = (field: keyof HSL, value: number): void => {
-    const maxMap: Record<keyof HSL, number> = { h: 360, s: 100, l: 100 };
+  const handleHslChange = (field: keyof Hsl, value: number): void => {
+    const maxMap: Record<keyof Hsl, number> = { h: 360, s: 100, l: 100 };
     const newHsl = { ...hsl, [field]: clamp(value, 0, maxMap[field]) };
     setHsl(newHsl);
     const newRgb = hslToRgb(newHsl);

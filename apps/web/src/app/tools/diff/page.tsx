@@ -131,10 +131,8 @@ export default function DiffPage() {
           <CardContent>
             <pre className="rounded-md bg-muted p-3 font-mono text-sm overflow-x-auto whitespace-pre-wrap leading-6">
               {changes.map((change, i) => (
-                <DiffChunk
-                  key={i}
-                  change={change}
-                />
+                // biome-ignore lint/suspicious/noArrayIndexKey: diff Change 객체는 value가 중복될 수 있어 고유 키가 없음
+                <DiffChunk key={i} change={change} />
               ))}
             </pre>
           </CardContent>

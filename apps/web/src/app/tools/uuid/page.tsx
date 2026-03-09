@@ -19,6 +19,8 @@ const generateUuid = (version: UuidVersion): string => {
       return uuidv4();
     case 'v7':
       return uuidv7();
+    default:
+      return uuidv4();
   }
 };
 

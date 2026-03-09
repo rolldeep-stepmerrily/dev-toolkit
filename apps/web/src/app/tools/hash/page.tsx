@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { CopyButton } from '@/components/copy-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-512';
@@ -22,6 +21,8 @@ const computeHash = (text: string, algorithm: HashAlgorithm): string => {
       return CryptoJS.SHA256(text).toString();
     case 'SHA-512':
       return CryptoJS.SHA512(text).toString();
+    default:
+      return '';
   }
 };
 
