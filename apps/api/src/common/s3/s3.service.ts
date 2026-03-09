@@ -31,6 +31,8 @@ export class S3Service implements OnModuleInit {
         secretAccessKey: configService.getOrThrow<string>('MINIO_SECRET_KEY'),
       },
       forcePathStyle: true,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
 
     this.bucket = configService.getOrThrow<string>('MINIO_BUCKET_NAME');
