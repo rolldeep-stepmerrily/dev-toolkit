@@ -102,9 +102,8 @@ export default function CronPage() {
         </CardContent>
       </Card>
 
-      {result && (
-        <>
-          {result.error ? (
+      {result &&
+        (result.error ? (
             <Card>
               <CardContent className="pt-6">
                 <p className="text-sm text-destructive">{result.error}</p>
@@ -149,9 +148,8 @@ export default function CronPage() {
                 </CardContent>
               </Card>
             </>
-          )}
-        </>
-      )}
+          )
+        )}
     </div>
   );
 }
