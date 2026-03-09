@@ -12,6 +12,7 @@ import { GetUserByIdQueryHandler } from './application/queries/get-user-by-id.qu
 import { ChangePasswordUseCase } from './application/use-cases/change-password.use-case';
 import { GetBookmarksUseCase } from './application/use-cases/get-bookmarks.use-case';
 import { GetMeUseCase } from './application/use-cases/get-me.use-case';
+import { GetAvatarPresignedUrlUseCase } from './application/use-cases/get-avatar-presigned-url.use-case';
 import { ToggleBookmarkUseCase } from './application/use-cases/toggle-bookmark.use-case';
 import { UpdateProfileUseCase } from './application/use-cases/update-profile.use-case';
 import { UsersHttpController } from './presenter/http/users.http.controller';
@@ -36,6 +37,7 @@ import { UsersHttpController } from './presenter/http/users.http.controller';
     /** use-cases */
     GetMeUseCase,
     UpdateProfileUseCase,
+    GetAvatarPresignedUrlUseCase,
     ChangePasswordUseCase,
     GetBookmarksUseCase,
     ToggleBookmarkUseCase,

@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import { LogOut, Menu, Settings, User } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LogOut, Menu, Settings, User } from 'lucide-react';
-
-import { useAuth } from '@/contexts/auth-context';
+import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/auth-context';
+import { useUserData } from '@/contexts/user-data-context';
 import { ThemeToggle } from './theme-toggle';
 
 interface HeaderProps {
@@ -16,6 +17,7 @@ interface HeaderProps {
 export const Header = ({ onMenuClick }: HeaderProps): React.JSX.Element => {
   const router = useRouter();
   const { user, isLoading, logout } = useAuth();
+  const { profile } = useUserData();
 
   const handleLogout = async (): Promise<void> => {
     await logout();
@@ -42,8 +44,24 @@ export const Header = ({ onMenuClick }: HeaderProps): React.JSX.Element => {
         {!isLoading &&
           (user ? (
             <div className="flex items-center gap-2">
+              {profile?.avatarUrl && (
+                <div className="relative hidden h-7 w-7 shrink-0 overflow-hidden rounded-full sm:block">
+                  <Image
+                    src={profile.avatarUrl}
+                    alt="avatar"
+                    fill
+                    unoptimized
+                    className="object-cover"
+                  />
+                </div>
+              )}
               <span className="hidden text-sm text-muted-foreground sm:block">{user.email}</span>
-              <Button variant="ghost" size="icon-sm" asChild aria-label="프로필 설정">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                asChild
+                aria-label="프로필 설정"
+              >
                 <Link href="/profile">
                   <Settings />
                 </Link>

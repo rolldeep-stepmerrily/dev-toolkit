@@ -3,12 +3,14 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGua
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ChangePasswordUseCase } from 'src/users/application/use-cases/change-password.use-case';
+import { GetAvatarPresignedUrlUseCase } from 'src/users/application/use-cases/get-avatar-presigned-url.use-case';
 import { GetBookmarksUseCase } from 'src/users/application/use-cases/get-bookmarks.use-case';
 import { GetMeUseCase } from 'src/users/application/use-cases/get-me.use-case';
 import { ToggleBookmarkUseCase } from 'src/users/application/use-cases/toggle-bookmark.use-case';
 import { UpdateProfileUseCase } from 'src/users/application/use-cases/update-profile.use-case';
 import { ProfileEntity } from 'src/users/entities/profile.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { GetAvatarPresignedUrlDto, GetAvatarPresignedUrlResponseDto } from './dto/get-avatar-presigned-url.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UsersRouter } from './users.path.presenter';
 
@@ -20,6 +22,7 @@ export class UsersHttpController {
   constructor(
     private readonly getMeUseCase: GetMeUseCase,
     private readonly updateProfileUseCase: UpdateProfileUseCase,
+    private readonly getAvatarPresignedUrlUseCase: GetAvatarPresignedUrlUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly getBookmarksUseCase: GetBookmarksUseCase,
     private readonly toggleBookmarkUseCase: ToggleBookmarkUseCase,
@@ -35,6 +38,19 @@ export class UsersHttpController {
   @Patch(UsersRouter.Http.UpdateProfile)
   async updateProfile(@User() user: { id: number }, @Body() bodyDto: UpdateProfileDto): Promise<ProfileEntity> {
     return await this.updateProfileUseCase.execute({ userId: user.id, bodyDto });
+  }
+
+  @ApiOperation({ summary: '아바타 업로드용 presigned URL 발급' })
+  @Post(UsersRouter.Http.GetAvatarPresignedUrl)
+  async getAvatarPresignedUrl(
+    @User() user: { id: number },
+    @Body() bodyDto: GetAvatarPresignedUrlDto,
+  ): Promise<GetAvatarPresignedUrlResponseDto> {
+    return await this.getAvatarPresignedUrlUseCase.execute({
+      userId: user.id,
+      filename: bodyDto.filename,
+      contentType: bodyDto.contentType,
+    });
   }
 
   @ApiOperation({ summary: '비밀번호 변경' })
