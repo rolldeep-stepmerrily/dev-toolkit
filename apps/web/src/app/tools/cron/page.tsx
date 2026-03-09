@@ -1,13 +1,13 @@
 'use client';
 
-import cronstrue from 'cronstrue';
 import { CronExpressionParser } from 'cron-parser';
+import cronstrue from 'cronstrue';
 import { useState } from 'react';
 import { CopyButton } from '@/components/copy-button';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 
 const PRESETS = [
   { label: '매 분', value: '* * * * *' },
@@ -104,52 +104,51 @@ export default function CronPage() {
 
       {result &&
         (result.error ? (
+          <Card>
+            <CardContent className="pt-6">
+              <p className="text-sm text-destructive">{result.error}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
             <Card>
-              <CardContent className="pt-6">
-                <p className="text-sm text-destructive">{result.error}</p>
+              <CardHeader>
+                <CardTitle className="text-base">설명</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Badge
+                  variant="secondary"
+                  className="text-sm px-3 py-1"
+                >
+                  {result.description}
+                </Badge>
               </CardContent>
             </Card>
-          ) : (
-            <>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">설명</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Badge
-                    variant="secondary"
-                    className="text-sm px-3 py-1"
-                  >
-                    {result.description}
-                  </Badge>
-                </CardContent>
-              </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">다음 실행 시간 (5회)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-1 font-mono text-sm">
-                    {result.nextRuns.map((date, i) => {
-                      const formatted = formatDate(date);
-                      return (
-                        <div
-                          key={date.getTime()}
-                          className="flex items-center justify-between rounded-md bg-muted px-3 py-1.5"
-                        >
-                          <span className="text-muted-foreground mr-3">{i + 1}.</span>
-                          <span className="flex-1">{formatted}</span>
-                          <CopyButton value={formatted} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )
-        )}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">다음 실행 시간 (5회)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-1 font-mono text-sm">
+                  {result.nextRuns.map((date, i) => {
+                    const formatted = formatDate(date);
+                    return (
+                      <div
+                        key={date.getTime()}
+                        className="flex items-center justify-between rounded-md bg-muted px-3 py-1.5"
+                      >
+                        <span className="text-muted-foreground mr-3">{i + 1}.</span>
+                        <span className="flex-1">{formatted}</span>
+                        <CopyButton value={formatted} />
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        ))}
     </div>
   );
 }

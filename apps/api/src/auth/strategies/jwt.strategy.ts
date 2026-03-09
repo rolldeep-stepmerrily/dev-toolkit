@@ -1,10 +1,9 @@
+import { AppException } from '@@exceptions';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { isDefined } from 'class-validator';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-
-import { AppException } from '@@exceptions';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AUTH_ERRORS } from '../auth.error';
 

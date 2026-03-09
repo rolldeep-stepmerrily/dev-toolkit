@@ -22,7 +22,7 @@ export class S3Service implements OnModuleInit {
   private readonly bucket: string;
   private readonly publicUrl: string;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(configService: ConfigService) {
     this.client = new S3Client({
       endpoint: configService.getOrThrow<string>('MINIO_ENDPOINT'),
       region: 'us-east-1',
@@ -31,6 +31,8 @@ export class S3Service implements OnModuleInit {
         secretAccessKey: configService.getOrThrow<string>('MINIO_SECRET_KEY'),
       },
       forcePathStyle: true,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
 
     this.bucket = configService.getOrThrow<string>('MINIO_BUCKET_NAME');

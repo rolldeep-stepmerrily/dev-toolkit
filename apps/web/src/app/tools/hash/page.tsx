@@ -29,15 +29,15 @@ const computeHash = (text: string, algorithm: HashAlgorithm): string => {
 export default function HashPage() {
   const [input, setInput] = useState('');
 
-  const hashes = input
-    ? ALGORITHMS.map((alg) => ({ algorithm: alg, hash: computeHash(input, alg) }))
-    : [];
+  const hashes = input ? ALGORITHMS.map((alg) => ({ algorithm: alg, hash: computeHash(input, alg) })) : [];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold">Hash 생성기</h1>
-        <p className="text-sm text-muted-foreground">텍스트를 MD5, SHA-1, SHA-256, SHA-512로 해시합니다. 모든 처리는 브라우저에서 이루어집니다.</p>
+        <p className="text-sm text-muted-foreground">
+          텍스트를 MD5, SHA-1, SHA-256, SHA-512로 해시합니다. 모든 처리는 브라우저에서 이루어집니다.
+        </p>
       </div>
 
       <Card>
