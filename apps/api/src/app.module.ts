@@ -5,6 +5,7 @@ import Joi from 'joi';
 
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
 import { BcryptModule } from './tools/bcrypt/bcrypt.module';
@@ -37,6 +38,7 @@ import { UsersModule } from './users/users.module';
       envFilePath: '.env',
       validationOptions: { abortEarly: true },
     }),
+    GlobalCqrsModule,
     PrismaModule,
     AuthModule,
     BcryptModule,
