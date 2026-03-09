@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -18,7 +18,9 @@ export default function ProfilePage(): React.JSX.Element {
   const { profile, refreshProfile } = useUserData();
 
   const [name, setName] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileMessage, setProfileMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -37,9 +39,26 @@ export default function ProfilePage(): React.JSX.Element {
   useEffect(() => {
     if (profile) {
       setName(profile.name ?? '');
-      setAvatarUrl(profile.avatarUrl ?? '');
     }
   }, [profile]);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    setAvatarFile(file);
+    setAvatarPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    };
+  }, [avatarPreview]);
 
   const handleProfileSave = async (): Promise<void> => {
     const token = await getValidToken();
@@ -50,12 +69,39 @@ export default function ProfilePage(): React.JSX.Element {
     setProfileMessage(null);
 
     try {
+      let newAvatarUrl: string | undefined;
+
+      if (avatarFile) {
+        // 1. presigned URL 발급
+        const { presignedUrl, objectUrl } = await apiFetch<{ presignedUrl: string; objectUrl: string }>(
+          '/users/me/avatar/presigned',
+          {
+            method: 'POST',
+            token,
+            body: JSON.stringify({ filename: avatarFile.name, contentType: avatarFile.type }),
+          },
+        );
+
+        // 2. MinIO에 직접 업로드
+        const uploadRes = await fetch(presignedUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': avatarFile.type },
+          body: avatarFile,
+        });
+
+        if (!uploadRes.ok) throw new Error('이미지 업로드에 실패했습니다');
+
+        newAvatarUrl = objectUrl;
+        setAvatarFile(null);
+      }
+
+      // 3. 프로필 업데이트
       await apiFetch('/users/me', {
         method: 'PATCH',
         token,
         body: JSON.stringify({
           name: name.trim() || null,
-          avatarUrl: avatarUrl.trim() || null,
+          ...(newAvatarUrl && { avatarUrl: newAvatarUrl }),
         }),
       });
 
@@ -120,19 +166,37 @@ export default function ProfilePage(): React.JSX.Element {
 
         {/* 아바타 미리보기 */}
         <div className="flex items-center gap-4">
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-muted">
-            {avatarUrl ? (
-              <Image src={avatarUrl} alt="avatar" fill unoptimized className="object-cover" />
+          <button
+            type="button"
+            className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-muted hover:opacity-80 transition-opacity"
+            onClick={() => fileInputRef.current?.click()}
+            aria-label="프로필 사진 변경"
+          >
+            {(avatarPreview ?? profile.avatarUrl) ? (
+              <Image
+                src={(avatarPreview ?? profile.avatarUrl) as string}
+                alt="avatar"
+                fill
+                unoptimized
+                className="object-cover"
+              />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-muted-foreground">
                 {(profile.name ?? profile.email)[0]?.toUpperCase()}
               </div>
             )}
-          </div>
+          </button>
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">{profile.email}</p>
-            <p>프로필 사진은 URL로 입력하세요</p>
+            <p>클릭하여 프로필 사진 변경 (최대 2MB)</p>
           </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
         </div>
 
         <div className="space-y-3">
@@ -146,17 +210,6 @@ export default function ProfilePage(): React.JSX.Element {
               maxLength={50}
             />
           </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="avatarUrl">아바타 URL</Label>
-            <Input
-              id="avatarUrl"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              placeholder="https://example.com/avatar.png"
-              type="url"
-            />
-          </div>
         </div>
 
         {profileMessage && (
@@ -165,7 +218,11 @@ export default function ProfilePage(): React.JSX.Element {
           </p>
         )}
 
-        <Button onClick={handleProfileSave} disabled={profileSaving} className="w-full">
+        <Button
+          onClick={handleProfileSave}
+          disabled={profileSaving}
+          className="w-full"
+        >
           {profileSaving ? '저장 중...' : '저장'}
         </Button>
       </Card>
@@ -216,7 +273,11 @@ export default function ProfilePage(): React.JSX.Element {
             </p>
           )}
 
-          <Button onClick={handlePasswordChange} disabled={passwordSaving} className="w-full">
+          <Button
+            onClick={handlePasswordChange}
+            disabled={passwordSaving}
+            className="w-full"
+          >
             {passwordSaving ? '변경 중...' : '비밀번호 변경'}
           </Button>
         </Card>
