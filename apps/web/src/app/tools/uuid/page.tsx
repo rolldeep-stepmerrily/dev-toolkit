@@ -1,7 +1,7 @@
 'use client';
 
-import { v1 as uuidv1, v4 as uuidv4, v7 as uuidv7 } from 'uuid';
 import { useState } from 'react';
+import { v1 as uuidv1, v4 as uuidv4, v7 as uuidv7 } from 'uuid';
 import { CopyButton } from '@/components/copy-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,7 +38,9 @@ export default function UuidPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold">UUID 생성기</h1>
-        <p className="text-sm text-muted-foreground">UUID v1, v4, v7을 생성합니다. 모든 처리는 브라우저에서 이루어집니다.</p>
+        <p className="text-sm text-muted-foreground">
+          UUID v1, v4, v7을 생성합니다. 모든 처리는 브라우저에서 이루어집니다.
+        </p>
       </div>
 
       <Card>

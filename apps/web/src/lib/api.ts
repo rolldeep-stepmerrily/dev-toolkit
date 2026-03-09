@@ -18,10 +18,7 @@ export class ApiError extends Error {
  * @returns {Promise<T>} 파싱된 응답 데이터
  * @throws {ApiError} HTTP 오류 응답인 경우
  */
-export const apiFetch = async <T>(
-  path: string,
-  options?: RequestInit & { token?: string },
-): Promise<T> => {
+export const apiFetch = async <T>(path: string, options?: RequestInit & { token?: string }): Promise<T> => {
   const { token, ...fetchOptions } = options ?? {};
 
   const headers: Record<string, string> = {

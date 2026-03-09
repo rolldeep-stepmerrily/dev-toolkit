@@ -61,7 +61,9 @@ export default function QrPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold">QR 코드 생성기</h1>
-        <p className="text-sm text-muted-foreground">텍스트 또는 URL로 QR 코드를 생성합니다. 모든 처리는 브라우저에서 이루어집니다.</p>
+        <p className="text-sm text-muted-foreground">
+          텍스트 또는 URL로 QR 코드를 생성합니다. 모든 처리는 브라우저에서 이루어집니다.
+        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

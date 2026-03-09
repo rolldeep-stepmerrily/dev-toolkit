@@ -54,7 +54,9 @@ export default function YamlPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold">YAML ↔ JSON</h1>
-        <p className="text-sm text-muted-foreground">YAML과 JSON을 상호 변환합니다. 모든 처리는 브라우저에서 이루어집니다.</p>
+        <p className="text-sm text-muted-foreground">
+          YAML과 JSON을 상호 변환합니다. 모든 처리는 브라우저에서 이루어집니다.
+        </p>
       </div>
 
       <Tabs defaultValue="yaml-to-json">

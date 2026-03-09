@@ -1,6 +1,6 @@
 'use client';
 
-import { diffLines, diffWords, type Change } from 'diff';
+import { type Change, diffLines, diffWords } from 'diff';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -36,18 +36,10 @@ const DiffChunk = ({ change }: DiffChunkProps): React.JSX.Element => {
   const value = change.value;
 
   if (change.added) {
-    return (
-      <span className="bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300">
-        {value}
-      </span>
-    );
+    return <span className="bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300">{value}</span>;
   }
   if (change.removed) {
-    return (
-      <span className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 line-through">
-        {value}
-      </span>
-    );
+    return <span className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 line-through">{value}</span>;
   }
   return <span>{value}</span>;
 };
@@ -67,7 +59,9 @@ export default function DiffPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold">Diff 뷰어</h1>
-        <p className="text-sm text-muted-foreground">두 텍스트의 차이를 시각화합니다. 모든 처리는 브라우저에서 이루어집니다.</p>
+        <p className="text-sm text-muted-foreground">
+          두 텍스트의 차이를 시각화합니다. 모든 처리는 브라우저에서 이루어집니다.
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -131,8 +125,11 @@ export default function DiffPage() {
           <CardContent>
             <pre className="rounded-md bg-muted p-3 font-mono text-sm overflow-x-auto whitespace-pre-wrap leading-6">
               {changes.map((change, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: diff Change 객체는 value가 중복될 수 있어 고유 키가 없음
-                <DiffChunk key={i} change={change} />
+                <DiffChunk
+                  // biome-ignore lint/suspicious/noArrayIndexKey: diff Change 객체는 value가 중복될 수 있어 고유 키가 없음
+                  key={i}
+                  change={change}
+                />
               ))}
             </pre>
           </CardContent>
