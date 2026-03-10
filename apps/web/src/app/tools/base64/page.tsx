@@ -44,7 +44,9 @@ export default function Base64Page() {
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
     if (file.size > MAX_FILE_SIZE) {
       setFileError('파일 크기는 10MB 이하여야 합니다.');
       setFileResult('');

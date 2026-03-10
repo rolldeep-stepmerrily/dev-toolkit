@@ -18,7 +18,9 @@ type DiffMode = 'lines' | 'words';
  * @returns {Change[]} 변경 청크 목록
  */
 const computeDiff = (original: string, modified: string, mode: DiffMode): Change[] => {
-  if (mode === 'words') return diffWords(original, modified);
+  if (mode === 'words') {
+    return diffWords(original, modified);
+  }
   return diffLines(original, modified);
 };
 

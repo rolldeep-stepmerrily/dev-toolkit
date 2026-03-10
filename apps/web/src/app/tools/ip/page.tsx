@@ -27,12 +27,18 @@ interface CidrInfo {
 
 const parseCidr = (cidr: string): CidrInfo | null => {
   const [ip, prefixStr] = cidr.split('/');
-  if (!(ip && prefixStr)) return null;
+  if (!(ip && prefixStr)) {
+    return null;
+  }
   const prefix = Number.parseInt(prefixStr, 10);
-  if (Number.isNaN(prefix) || prefix < 0 || prefix > 32) return null;
+  if (Number.isNaN(prefix) || prefix < 0 || prefix > 32) {
+    return null;
+  }
 
   const parts = ip.split('.').map(Number);
-  if (parts.length !== 4 || parts.some((p) => Number.isNaN(p) || p < 0 || p > 255)) return null;
+  if (parts.length !== 4 || parts.some((p) => Number.isNaN(p) || p < 0 || p > 255)) {
+    return null;
+  }
 
   const ipNum = parts.reduce((acc, p) => (acc << 8) | p, 0) >>> 0;
   const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
@@ -58,14 +64,18 @@ const parseCidr = (cidr: string): CidrInfo | null => {
 
 const ipv4ToIpv6 = (ip: string): string => {
   const parts = ip.split('.').map(Number);
-  if (parts.length !== 4 || parts.some((p) => Number.isNaN(p))) return '유효하지 않은 IPv4';
+  if (parts.length !== 4 || parts.some((p) => Number.isNaN(p))) {
+    return '유효하지 않은 IPv4';
+  }
   return `::ffff:${ip}`;
 };
 
 const ipv6ToIpv4 = (ip: string): string => {
   if (ip.startsWith('::ffff:')) {
     const v4 = ip.slice(7);
-    if (/^\d+\.\d+\.\d+\.\d+$/.test(v4)) return v4;
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(v4)) {
+      return v4;
+    }
   }
   return 'IPv4-mapped IPv6 형식만 변환 가능합니다. (예: ::ffff:1.2.3.4)';
 };
@@ -86,9 +96,13 @@ export default function IpPage() {
     setIpLoading(true);
     setIpError('');
     try {
-      if (!API_URL) throw new Error('API 서버 URL이 설정되지 않았습니다. (.env.local 확인)');
+      if (!API_URL) {
+        throw new Error('API 서버 URL이 설정되지 않았습니다. (.env.local 확인)');
+      }
       const res = await fetch(`${API_URL}/tools/ip/me`);
-      if (!res.ok) throw new Error('IP 조회 실패');
+      if (!res.ok) {
+        throw new Error('IP 조회 실패');
+      }
       const data = await res.json();
       setMyIp(data);
     } catch (e) {

@@ -37,11 +37,15 @@ export class LogoutUseCase {
    * @param {string} token Access token
    */
   private async blacklistAccessToken(token: string): Promise<void> {
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     const decoded = this.jwtService.decode(token) as { exp?: number } | null;
 
-    if (!decoded?.exp) return;
+    if (!decoded?.exp) {
+      return;
+    }
 
     const ttlSeconds = Math.max(0, decoded.exp - Math.floor(Date.now() / 1000));
 

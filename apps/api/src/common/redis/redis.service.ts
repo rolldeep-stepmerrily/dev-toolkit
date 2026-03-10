@@ -36,7 +36,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
    * @param {number} ttlSeconds 만료까지 남은 초
    */
   async addToBlacklist(token: string, ttlSeconds: number): Promise<void> {
-    if (ttlSeconds <= 0) return;
+    if (ttlSeconds <= 0) {
+      return;
+    }
 
     await this.client.set(`blacklist:${token}`, '1', 'EX', ttlSeconds);
   }

@@ -18,7 +18,9 @@ const formatDate = (date: Date, tz: string): string => date.toLocaleString('ko-K
 
 const tsToDate = (input: string, tz: string): string => {
   const num = Number(input.trim());
-  if (!input.trim() || Number.isNaN(num)) return '';
+  if (!input.trim() || Number.isNaN(num)) {
+    return '';
+  }
   const ms = input.trim().length <= 10 ? num * 1000 : num;
   try {
     return formatDate(new Date(ms), tz);
