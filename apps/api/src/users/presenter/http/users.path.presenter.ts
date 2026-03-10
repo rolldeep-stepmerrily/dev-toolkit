@@ -8,5 +8,6 @@ export const UsersRouter = {
     ChangePassword: 'me/password',
     GetBookmarks: 'me/bookmarks',
     ToggleBookmark: 'me/bookmarks/:toolId',
+    DeleteMe: 'me',
   },
 } as const;
