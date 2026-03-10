@@ -20,7 +20,9 @@ interface Hsl {
 
 const hexToRgb = (hex: string): Rgb | null => {
   const clean = hex.replace('#', '');
-  if (!/^[0-9a-fA-F]{6}$/.test(clean)) return null;
+  if (!/^[0-9a-fA-F]{6}$/.test(clean)) {
+    return null;
+  }
   return {
     r: Number.parseInt(clean.slice(0, 2), 16),
     g: Number.parseInt(clean.slice(2, 4), 16),

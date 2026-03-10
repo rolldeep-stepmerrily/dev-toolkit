@@ -62,7 +62,9 @@ const tryDecode = (token: string) => {
 };
 
 const isExpired = (payload: Record<string, unknown> | null): boolean | null => {
-  if (!payload?.exp) return null;
+  if (!payload?.exp) {
+    return null;
+  }
   return (payload.exp as number) < Math.floor(Date.now() / 1000);
 };
 

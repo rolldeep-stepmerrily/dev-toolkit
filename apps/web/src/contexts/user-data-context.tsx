@@ -40,7 +40,9 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }): R
     try {
       const token = await getValidTokenRef.current();
 
-      if (!token) return;
+      if (!token) {
+        return;
+      }
 
       const [profileData, bookmarksData] = await Promise.all([
         apiFetch<Profile>('/users/me', { token }),
@@ -69,7 +71,9 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }): R
     async (toolId: string): Promise<void> => {
       const token = await getValidToken();
 
-      if (!token) return;
+      if (!token) {
+        return;
+      }
 
       const updated = await apiFetch<string[]>(`/users/me/bookmarks/${toolId}`, {
         method: 'POST',
@@ -84,7 +88,9 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }): R
   const refreshProfile = useCallback(async (): Promise<void> => {
     const token = await getValidToken();
 
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     const updated = await apiFetch<Profile>('/users/me', { token });
     setProfile(updated);

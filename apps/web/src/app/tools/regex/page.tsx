@@ -17,7 +17,9 @@ interface MatchResult {
 }
 
 const buildRegex = (pattern: string, flags: Set<Flag>): RegExp | null => {
-  if (!pattern) return null;
+  if (!pattern) {
+    return null;
+  }
   try {
     return new RegExp(pattern, Array.from(flags).join(''));
   } catch {
@@ -26,25 +28,35 @@ const buildRegex = (pattern: string, flags: Set<Flag>): RegExp | null => {
 };
 
 const getMatches = (text: string, regex: RegExp | null): MatchResult[] => {
-  if (!(regex && text)) return [];
+  if (!(regex && text)) {
+    return [];
+  }
   const r = regex.flags.includes('g') ? regex : new RegExp(regex.source, `${regex.flags}g`);
   const results: MatchResult[] = [];
   let match = r.exec(text);
   while (match !== null) {
     results.push({ match: match[0], index: match.index, groups: match.slice(1) });
-    if (!regex.flags.includes('g')) break;
-    if (match[0].length === 0) r.lastIndex++;
+    if (!regex.flags.includes('g')) {
+      break;
+    }
+    if (match[0].length === 0) {
+      r.lastIndex++;
+    }
     match = r.exec(text);
   }
   return results;
 };
 
 const highlightText = (text: string, matches: MatchResult[]): React.ReactNode[] => {
-  if (matches.length === 0) return [text];
+  if (matches.length === 0) {
+    return [text];
+  }
   const nodes: React.ReactNode[] = [];
   let last = 0;
   for (const m of matches) {
-    if (m.index > last) nodes.push(text.slice(last, m.index));
+    if (m.index > last) {
+      nodes.push(text.slice(last, m.index));
+    }
     nodes.push(
       <mark
         key={m.index}
@@ -55,7 +67,9 @@ const highlightText = (text: string, matches: MatchResult[]): React.ReactNode[] 
     );
     last = m.index + m.match.length;
   }
-  if (last < text.length) nodes.push(text.slice(last));
+  if (last < text.length) {
+    nodes.push(text.slice(last));
+  }
   return nodes;
 };
 
@@ -70,7 +84,9 @@ export default function RegexPage() {
   const matches = useMemo(() => getMatches(testText, regex), [testText, regex]);
 
   const replaceResult = useMemo(() => {
-    if (!(regex && testText) || replaceWith === '') return '';
+    if (!(regex && testText) || replaceWith === '') {
+      return '';
+    }
     try {
       return testText.replace(regex, replaceWith);
     } catch {
@@ -81,8 +97,11 @@ export default function RegexPage() {
   const toggleFlag = (f: Flag) => {
     setFlags((prev) => {
       const next = new Set(prev);
-      if (next.has(f)) next.delete(f);
-      else next.add(f);
+      if (next.has(f)) {
+        next.delete(f);
+      } else {
+        next.add(f);
+      }
       return next;
     });
   };

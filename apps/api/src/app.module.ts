@@ -1,5 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import Joi from 'joi';
 
@@ -8,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
+import { RedisModule, RedisService, RedisThrottlerStorage } from './common/redis';
 import { S3Module } from './common/s3';
 import { BcryptModule } from './tools/bcrypt/bcrypt.module';
 import { IpModule } from './tools/ip/ip.module';
@@ -15,6 +18,14 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    RedisModule,
+    ThrottlerModule.forRootAsync({
+      inject: [RedisService],
+      useFactory: (redisService: RedisService) => ({
+        throttlers: [{ name: 'default', ttl: 60_000, limit: 60 }],
+        storage: new RedisThrottlerStorage(redisService.getClient()),
+      }),
+    }),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         SERVER_URL: Joi.string().required(),
@@ -53,6 +64,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   controllers: [AppController],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

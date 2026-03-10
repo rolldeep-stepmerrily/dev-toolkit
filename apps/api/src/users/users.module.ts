@@ -10,9 +10,9 @@ import { GetBookmarksQueryHandler } from './application/queries/get-bookmarks.qu
 import { GetOneUserByEmailQueryHandler } from './application/queries/get-one-user-by-email.query';
 import { GetUserByIdQueryHandler } from './application/queries/get-user-by-id.query';
 import { ChangePasswordUseCase } from './application/use-cases/change-password.use-case';
+import { GetAvatarPresignedUrlUseCase } from './application/use-cases/get-avatar-presigned-url.use-case';
 import { GetBookmarksUseCase } from './application/use-cases/get-bookmarks.use-case';
 import { GetMeUseCase } from './application/use-cases/get-me.use-case';
-import { GetAvatarPresignedUrlUseCase } from './application/use-cases/get-avatar-presigned-url.use-case';
 import { ToggleBookmarkUseCase } from './application/use-cases/toggle-bookmark.use-case';
 import { UpdateProfileUseCase } from './application/use-cases/update-profile.use-case';
 import { UsersHttpController } from './presenter/http/users.http.controller';

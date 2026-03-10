@@ -21,7 +21,9 @@ export default function UrlPage() {
 
   const encoded = encodeInput ? encodeURIComponent(encodeInput) : '';
   const decoded = (() => {
-    if (!decodeInput) return '';
+    if (!decodeInput) {
+      return '';
+    }
     try {
       return decodeURIComponent(decodeInput);
     } catch {

@@ -112,9 +112,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): React
   const getValidToken = useCallback(async (): Promise<string | null> => {
     const currentToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
-    if (!currentToken) return null;
+    if (!currentToken) {
+      return null;
+    }
 
-    if (!isTokenExpired(currentToken)) return currentToken;
+    if (!isTokenExpired(currentToken)) {
+      return currentToken;
+    }
 
     const storedRefreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 

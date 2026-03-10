@@ -62,7 +62,9 @@ export default function ProfilePage(): React.JSX.Element {
 
         canvas.toBlob(
           (blob) => {
-            if (!blob) return reject(new Error('이미지 변환에 실패했습니다'));
+            if (!blob) {
+              return reject(new Error('이미지 변환에 실패했습니다'));
+            }
             resolve(new File([blob], 'avatar.webp', { type: 'image/webp' }));
           },
           'image/webp',
@@ -81,7 +83,9 @@ export default function ProfilePage(): React.JSX.Element {
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file = e.target.files?.[0];
 
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     if (file.size > 5 * 1024 * 1024) {
       setProfileMessage({ type: 'error', text: '5MB 이하 이미지만 업로드할 수 있습니다' });
@@ -92,7 +96,9 @@ export default function ProfilePage(): React.JSX.Element {
       const compressed = await compressImage(file);
       setAvatarFile(compressed);
       setAvatarPreview((prev) => {
-        if (prev) URL.revokeObjectURL(prev);
+        if (prev) {
+          URL.revokeObjectURL(prev);
+        }
         return URL.createObjectURL(compressed);
       });
     } catch {
@@ -102,14 +108,18 @@ export default function ProfilePage(): React.JSX.Element {
 
   useEffect(() => {
     return () => {
-      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
     };
   }, [avatarPreview]);
 
   const handleProfileSave = async (): Promise<void> => {
     const token = await getValidToken();
 
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     setProfileSaving(true);
     setProfileMessage(null);
@@ -135,7 +145,9 @@ export default function ProfilePage(): React.JSX.Element {
           body: avatarFile,
         });
 
-        if (!uploadRes.ok) throw new Error('이미지 업로드에 실패했습니다');
+        if (!uploadRes.ok) {
+          throw new Error('이미지 업로드에 실패했습니다');
+        }
 
         newAvatarUrl = objectUrl;
         setAvatarFile(null);
@@ -174,7 +186,9 @@ export default function ProfilePage(): React.JSX.Element {
 
     const token = await getValidToken();
 
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     setPasswordSaving(true);
     setPasswordMessage(null);
