@@ -8,10 +8,16 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   constructor(private readonly configService: ConfigService) {}
 
+  /**
+   * 모듈 초기화 시 Redis 클라이언트를 생성
+   */
   onModuleInit(): void {
+    const password = this.configService.get<string>('REDIS_PASSWORD');
+
     this.client = new Redis({
       host: this.configService.getOrThrow<string>('REDIS_HOST'),
       port: this.configService.getOrThrow<number>('REDIS_PORT'),
+      ...(password !== undefined && { password }),
       lazyConnect: true,
     });
   }
