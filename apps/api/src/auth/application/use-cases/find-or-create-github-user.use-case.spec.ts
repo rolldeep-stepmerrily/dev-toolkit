@@ -17,15 +17,15 @@ describe('FindOrCreateGithubUserUseCase', () => {
   let mockCommandBus: { execute: jest.Mock };
   let mockQueryBus: { execute: jest.Mock };
 
-  const GITHUB_PROFILE_ID = '12345';
-  const GITHUB_EMAIL = 'github@example.com';
-  const ACCESS_TOKEN = 'github-access-token';
+  const GithubProfileId = '12345';
+  const GithubEmail = 'github@example.com';
+  const AccessToken = 'github-access-token';
 
   const makeProfile = (overrides: Partial<TestProfile> = {}): TestProfile => ({
-    id: GITHUB_PROFILE_ID,
+    id: GithubProfileId,
     displayName: 'GitHub User',
     username: 'githubuser',
-    emails: [{ value: GITHUB_EMAIL }],
+    emails: [{ value: GithubEmail }],
     photos: [{ value: 'https://avatar.url/photo.png' }],
     provider: 'github',
     ...overrides,
@@ -33,7 +33,7 @@ describe('FindOrCreateGithubUserUseCase', () => {
 
   const mockUser: Partial<UserEntity> = {
     id: 1,
-    email: GITHUB_EMAIL,
+    email: GithubEmail,
     name: 'GitHub User',
     avatarUrl: 'https://avatar.url/photo.png',
     password: null,
@@ -52,7 +52,7 @@ describe('FindOrCreateGithubUserUseCase', () => {
         const existingOAuthAccount = { id: 10, user: mockUser };
         mockQueryBus.execute.mockResolvedValueOnce(existingOAuthAccount);
 
-        const result = await useCase.execute({ profile: makeProfile() as any, accessToken: ACCESS_TOKEN });
+        const result = await useCase.execute({ profile: makeProfile() as any, accessToken: AccessToken });
 
         expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
         const command = mockCommandBus.execute.mock.calls[0]?.[0] as { constructor: { name: string } };
@@ -64,11 +64,11 @@ describe('FindOrCreateGithubUserUseCase', () => {
     describe('[케이스 2] OAuth 계정 없음 + 동일 이메일 유저 존재', () => {
       it('기존 유저에 OAuth 계정을 연결하고 해당 유저를 반환한다', async () => {
         mockQueryBus.execute
-          .mockResolvedValueOnce(null)     // GetOAuthAccountByProviderQuery → 없음
+          .mockResolvedValueOnce(null) // GetOAuthAccountByProviderQuery → 없음
           .mockResolvedValueOnce(mockUser); // GetOneUserByEmailQuery → 기존 유저 존재
         mockCommandBus.execute.mockResolvedValue(undefined);
 
-        const result = await useCase.execute({ profile: makeProfile() as any, accessToken: ACCESS_TOKEN });
+        const result = await useCase.execute({ profile: makeProfile() as any, accessToken: AccessToken });
 
         // 유저 생성 없이 CreateOAuthAccountCommand만 실행
         expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
@@ -84,15 +84,17 @@ describe('FindOrCreateGithubUserUseCase', () => {
           .mockResolvedValueOnce(null) // GetOAuthAccountByProviderQuery
           .mockResolvedValueOnce(null); // GetOneUserByEmailQuery
         mockCommandBus.execute
-          .mockResolvedValueOnce(mockUser)   // SaveGithubUserCommand
+          .mockResolvedValueOnce(mockUser) // SaveGithubUserCommand
           .mockResolvedValueOnce(undefined); // CreateOAuthAccountCommand
 
-        const result = await useCase.execute({ profile: makeProfile() as any, accessToken: ACCESS_TOKEN });
+        const result = await useCase.execute({ profile: makeProfile() as any, accessToken: AccessToken });
 
         expect(mockCommandBus.execute).toHaveBeenCalledTimes(2);
         const [saveUserCall, createOAuthCall] = mockCommandBus.execute.mock.calls;
         expect((saveUserCall?.[0] as { constructor: { name: string } }).constructor.name).toBe('SaveGithubUserCommand');
-        expect((createOAuthCall?.[0] as { constructor: { name: string } }).constructor.name).toBe('CreateOAuthAccountCommand');
+        expect((createOAuthCall?.[0] as { constructor: { name: string } }).constructor.name).toBe(
+          'CreateOAuthAccountCommand',
+        );
         expect(result).toEqual(mockUser);
       });
     });
@@ -101,20 +103,20 @@ describe('FindOrCreateGithubUserUseCase', () => {
       it('placeholder 이메일(github_{id}@noemail.dev)로 유저를 생성한다', async () => {
         mockQueryBus.execute.mockResolvedValueOnce(null); // GetOAuthAccountByProviderQuery
         mockCommandBus.execute
-          .mockResolvedValueOnce(mockUser)   // SaveGithubUserCommand
+          .mockResolvedValueOnce(mockUser) // SaveGithubUserCommand
           .mockResolvedValueOnce(undefined); // CreateOAuthAccountCommand
 
-        await useCase.execute({ profile: makeProfile({ emails: undefined }) as any, accessToken: ACCESS_TOKEN });
+        await useCase.execute({ profile: makeProfile({ emails: undefined }) as any, accessToken: AccessToken });
 
         const saveUserCommand = mockCommandBus.execute.mock.calls[0]?.[0] as { props: { email: string } };
-        expect(saveUserCommand.props.email).toBe(`github_${GITHUB_PROFILE_ID}@noemail.dev`);
+        expect(saveUserCommand.props.email).toBe(`github_${GithubProfileId}@noemail.dev`);
       });
 
       it('이메일이 없으면 GetOneUserByEmailQuery를 실행하지 않는다', async () => {
         mockQueryBus.execute.mockResolvedValueOnce(null);
         mockCommandBus.execute.mockResolvedValue(mockUser);
 
-        await useCase.execute({ profile: makeProfile({ emails: undefined }) as any, accessToken: ACCESS_TOKEN });
+        await useCase.execute({ profile: makeProfile({ emails: undefined }) as any, accessToken: AccessToken });
 
         // GetOAuthAccountByProviderQuery 한 번만 호출
         expect(mockQueryBus.execute).toHaveBeenCalledTimes(1);
@@ -127,9 +129,9 @@ describe('FindOrCreateGithubUserUseCase', () => {
       mockQueryBus.execute.mockResolvedValue(mockUser);
 
       const result = await useCase.findOrCreateUser({
-        email: GITHUB_EMAIL,
+        email: GithubEmail,
         profile: makeProfile() as any,
-        providerAccountId: GITHUB_PROFILE_ID,
+        providerAccountId: GithubProfileId,
       });
 
       expect(mockCommandBus.execute).not.toHaveBeenCalled();
@@ -142,7 +144,7 @@ describe('FindOrCreateGithubUserUseCase', () => {
       await useCase.findOrCreateUser({
         email: undefined,
         profile: makeProfile() as any,
-        providerAccountId: GITHUB_PROFILE_ID,
+        providerAccountId: GithubProfileId,
       });
 
       expect(mockQueryBus.execute).not.toHaveBeenCalled();

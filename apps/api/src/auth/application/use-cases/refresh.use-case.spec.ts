@@ -60,10 +60,7 @@ describe('RefreshUseCase', () => {
     it('토큰 발급 시 userId와 email로 payload를 구성한다', async () => {
       await useCase.execute(props);
 
-      expect(mockJwtService.sign).toHaveBeenCalledWith(
-        { sub: props.userId, email: props.email },
-        expect.any(Object),
-      );
+      expect(mockJwtService.sign).toHaveBeenCalledWith({ sub: props.userId, email: props.email }, expect.any(Object));
     });
   });
 

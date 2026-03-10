@@ -1,20 +1,20 @@
 import type Redis from 'ioredis';
-import { RedisThrottlerStorage } from './redis-throttler.storage';
 import { RedisService } from './redis.service';
+import { RedisThrottlerStorage } from './redis-throttler.storage';
 
 describe('RedisThrottlerStorage', () => {
   let storage: RedisThrottlerStorage;
   let mockRedisClient: jest.Mocked<Pick<Redis, 'exists' | 'pttl' | 'incr' | 'pexpire' | 'set'>>;
   let mockRedisService: { getClient: jest.Mock };
 
-  const KEY = 'user-ip-key';
-  const TTL = 60_000;
-  const LIMIT = 5;
-  const BLOCK_DURATION = 10_000;
-  const THROTTLER_NAME = 'default';
+  const Key = 'user-ip-key';
+  const Ttl = 60_000;
+  const Limit = 5;
+  const BlockDuration = 10_000;
+  const ThrottlerName = 'default';
 
-  const hitKey = `throttle:${THROTTLER_NAME}:${KEY}`;
-  const blockKey = `throttle:block:${THROTTLER_NAME}:${KEY}`;
+  const hitKey = `throttle:${ThrottlerName}:${Key}`;
+  const blockKey = `throttle:block:${ThrottlerName}:${Key}`;
 
   beforeEach(() => {
     mockRedisClient = {
@@ -35,11 +35,11 @@ describe('RedisThrottlerStorage', () => {
       mockRedisClient.exists.mockResolvedValue(1);
       mockRedisClient.pttl.mockResolvedValue(5_000);
 
-      const result = await storage.increment(KEY, TTL, LIMIT, BLOCK_DURATION, THROTTLER_NAME);
+      const result = await storage.increment(Key, Ttl, Limit, BlockDuration, ThrottlerName);
 
       expect(mockRedisClient.incr).not.toHaveBeenCalled();
       expect(result.isBlocked).toBe(true);
-      expect(result.totalHits).toBe(LIMIT + 1);
+      expect(result.totalHits).toBe(Limit + 1);
       expect(result.timeToBlockExpire).toBe(5_000);
     });
 
@@ -48,9 +48,9 @@ describe('RedisThrottlerStorage', () => {
       mockRedisClient.incr.mockResolvedValue(1);
       mockRedisClient.pttl.mockResolvedValue(59_000);
 
-      const result = await storage.increment(KEY, TTL, LIMIT, BLOCK_DURATION, THROTTLER_NAME);
+      const result = await storage.increment(Key, Ttl, Limit, BlockDuration, ThrottlerName);
 
-      expect(mockRedisClient.pexpire).toHaveBeenCalledWith(hitKey, TTL);
+      expect(mockRedisClient.pexpire).toHaveBeenCalledWith(hitKey, Ttl);
       expect(result.totalHits).toBe(1);
       expect(result.isBlocked).toBe(false);
     });
@@ -60,7 +60,7 @@ describe('RedisThrottlerStorage', () => {
       mockRedisClient.incr.mockResolvedValue(3);
       mockRedisClient.pttl.mockResolvedValue(50_000);
 
-      const result = await storage.increment(KEY, TTL, LIMIT, BLOCK_DURATION, THROTTLER_NAME);
+      const result = await storage.increment(Key, Ttl, Limit, BlockDuration, ThrottlerName);
 
       expect(mockRedisClient.pexpire).not.toHaveBeenCalled();
       expect(result.totalHits).toBe(3);
@@ -69,24 +69,24 @@ describe('RedisThrottlerStorage', () => {
 
     it('limit을 초과하면 blockKey를 설정하고 isBlocked: true를 반환한다', async () => {
       mockRedisClient.exists.mockResolvedValue(0);
-      mockRedisClient.incr.mockResolvedValue(LIMIT + 1);
+      mockRedisClient.incr.mockResolvedValue(Limit + 1);
       mockRedisClient.pttl
         .mockResolvedValueOnce(50_000) // hitKey pttl
-        .mockResolvedValueOnce(BLOCK_DURATION); // blockKey pttl
+        .mockResolvedValueOnce(BlockDuration); // blockKey pttl
 
-      const result = await storage.increment(KEY, TTL, LIMIT, BLOCK_DURATION, THROTTLER_NAME);
+      const result = await storage.increment(Key, Ttl, Limit, BlockDuration, ThrottlerName);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(blockKey, '1', 'PX', BLOCK_DURATION);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(blockKey, '1', 'PX', BlockDuration);
       expect(result.isBlocked).toBe(true);
-      expect(result.timeToBlockExpire).toBe(BLOCK_DURATION);
+      expect(result.timeToBlockExpire).toBe(BlockDuration);
     });
 
     it('limit 이내이면 isBlocked: false이고 blockKey를 설정하지 않는다', async () => {
       mockRedisClient.exists.mockResolvedValue(0);
-      mockRedisClient.incr.mockResolvedValue(LIMIT);
+      mockRedisClient.incr.mockResolvedValue(Limit);
       mockRedisClient.pttl.mockResolvedValue(30_000);
 
-      const result = await storage.increment(KEY, TTL, LIMIT, BLOCK_DURATION, THROTTLER_NAME);
+      const result = await storage.increment(Key, Ttl, Limit, BlockDuration, ThrottlerName);
 
       expect(mockRedisClient.set).not.toHaveBeenCalled();
       expect(result.isBlocked).toBe(false);
@@ -97,7 +97,7 @@ describe('RedisThrottlerStorage', () => {
       mockRedisClient.exists.mockResolvedValue(1);
       mockRedisClient.pttl.mockResolvedValue(-1);
 
-      const result = await storage.increment(KEY, TTL, LIMIT, BLOCK_DURATION, THROTTLER_NAME);
+      const result = await storage.increment(Key, Ttl, Limit, BlockDuration, ThrottlerName);
 
       expect(result.timeToBlockExpire).toBe(0);
     });

@@ -8,9 +8,9 @@ describe('LogoutUseCase', () => {
   let mockJwtService: { decode: jest.Mock };
   let mockRedisService: { addToBlacklist: jest.Mock };
 
-  const USER_ID = 1;
-  const REFRESH_TOKEN = 'refresh-token-value';
-  const ACCESS_TOKEN = 'access-token-value';
+  const UserId = 1;
+  const RefreshToken = 'refresh-token-value';
+  const AccessToken = 'access-token-value';
 
   beforeEach(() => {
     mockCommandBus = { execute: jest.fn().mockResolvedValue(undefined) };
@@ -29,7 +29,7 @@ describe('LogoutUseCase', () => {
       const futureExp = Math.floor(Date.now() / 1000) + 900;
       mockJwtService.decode.mockReturnValue({ exp: futureExp });
 
-      await useCase.execute({ userId: USER_ID, refreshToken: REFRESH_TOKEN, accessToken: ACCESS_TOKEN });
+      await useCase.execute({ userId: UserId, refreshToken: RefreshToken, accessToken: AccessToken });
 
       expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
       expect(mockRedisService.addToBlacklist).toHaveBeenCalledTimes(1);
@@ -39,9 +39,9 @@ describe('LogoutUseCase', () => {
       const futureExp = Math.floor(Date.now() / 1000) + 900;
       mockJwtService.decode.mockReturnValue({ exp: futureExp });
 
-      await useCase.execute({ userId: USER_ID, refreshToken: REFRESH_TOKEN, accessToken: ACCESS_TOKEN });
+      await useCase.execute({ userId: UserId, refreshToken: RefreshToken, accessToken: AccessToken });
 
-      expect(mockRedisService.addToBlacklist).toHaveBeenCalledWith(ACCESS_TOKEN, expect.any(Number));
+      expect(mockRedisService.addToBlacklist).toHaveBeenCalledWith(AccessToken, expect.any(Number));
       const [, ttl] = mockRedisService.addToBlacklist.mock.calls[0] as [string, number];
       expect(ttl).toBeGreaterThan(0);
       expect(ttl).toBeLessThanOrEqual(900);
@@ -50,7 +50,7 @@ describe('LogoutUseCase', () => {
     it('액세스 토큰에 exp 클레임이 없으면 블랙리스트에 추가하지 않는다', async () => {
       mockJwtService.decode.mockReturnValue({ sub: 1 });
 
-      await useCase.execute({ userId: USER_ID, refreshToken: REFRESH_TOKEN, accessToken: ACCESS_TOKEN });
+      await useCase.execute({ userId: UserId, refreshToken: RefreshToken, accessToken: AccessToken });
 
       expect(mockRedisService.addToBlacklist).not.toHaveBeenCalled();
     });
@@ -58,13 +58,13 @@ describe('LogoutUseCase', () => {
     it('액세스 토큰이 null로 디코딩되면 블랙리스트에 추가하지 않는다', async () => {
       mockJwtService.decode.mockReturnValue(null);
 
-      await useCase.execute({ userId: USER_ID, refreshToken: REFRESH_TOKEN, accessToken: ACCESS_TOKEN });
+      await useCase.execute({ userId: UserId, refreshToken: RefreshToken, accessToken: AccessToken });
 
       expect(mockRedisService.addToBlacklist).not.toHaveBeenCalled();
     });
 
     it('액세스 토큰이 빈 문자열이면 decode를 호출하지 않고 블랙리스트도 추가하지 않는다', async () => {
-      await useCase.execute({ userId: USER_ID, refreshToken: REFRESH_TOKEN, accessToken: '' });
+      await useCase.execute({ userId: UserId, refreshToken: RefreshToken, accessToken: '' });
 
       expect(mockJwtService.decode).not.toHaveBeenCalled();
       expect(mockRedisService.addToBlacklist).not.toHaveBeenCalled();
@@ -74,10 +74,10 @@ describe('LogoutUseCase', () => {
       const pastExp = Math.floor(Date.now() / 1000) - 100;
       mockJwtService.decode.mockReturnValue({ exp: pastExp });
 
-      await useCase.execute({ userId: USER_ID, refreshToken: REFRESH_TOKEN, accessToken: ACCESS_TOKEN });
+      await useCase.execute({ userId: UserId, refreshToken: RefreshToken, accessToken: AccessToken });
 
       // Math.max(0, negative) = 0 이므로 addToBlacklist(token, 0) 호출
-      expect(mockRedisService.addToBlacklist).toHaveBeenCalledWith(ACCESS_TOKEN, 0);
+      expect(mockRedisService.addToBlacklist).toHaveBeenCalledWith(AccessToken, 0);
     });
   });
 });

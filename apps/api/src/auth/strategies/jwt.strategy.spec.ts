@@ -10,6 +10,7 @@ jest.mock('passport-jwt', () => ({
     fromAuthHeaderAsBearerToken: jest.fn().mockReturnValue(mockTokenExtractor),
   },
   Strategy: class MockPassportJwtStrategy {
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: 테스트용 mock 클래스
     constructor(_opts: unknown) {}
   },
 }));
@@ -17,13 +18,16 @@ jest.mock('passport-jwt', () => ({
 jest.mock('@nestjs/passport', () => ({
   PassportStrategy: (_Strategy: unknown, _name?: string) => {
     return class MockPassportBase {
+      // biome-ignore lint/suspicious/noEmptyBlockStatements: 테스트용 mock 클래스
       constructor(_opts: unknown) {}
     };
   },
 }));
 
 // passport-jwt mock이 먼저 적용된 후 import 해야 하므로 require 사용
+// biome-ignore lint/style/useNamingConvention: require로 클래스 지연 import 시 PascalCase 필요
 const { JwtStrategy } = require('./jwt.strategy') as {
+  // biome-ignore lint/style/useNamingConvention: 클래스 생성자 참조 타입 프로퍼티
   JwtStrategy: new (
     configService: ConfigService,
     prisma: unknown,
