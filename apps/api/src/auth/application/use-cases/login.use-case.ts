@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: @nestjs/jwt v11 expiresIn 타입이 ms의 StringValue를 요구하나 string과 호환되지 않는 라이브러리 타입 이슈 */
 import { AppException } from '@@exceptions';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -9,6 +8,7 @@ import dayjs from 'dayjs';
 import { AUTH_ERRORS } from 'src/auth/auth.error';
 import { LoginRequestBodyDto, LoginResponseDataDto } from 'src/auth/presenter/http/dto/login.dto';
 import { TypedCommandBus, TypedQueryBus } from 'src/common/cqrs';
+import type { JwtExpiresIn } from 'src/common/types/jwt.types';
 import { GetOneUserByEmailQuery } from 'src/users/application/queries/get-one-user-by-email.query';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { SaveRefreshTokenCommand } from '../command/save-refresh-token.command';
@@ -68,11 +68,11 @@ export class LoginUseCase {
     const tokens = {
       accessToken: this.jwtService.sign(payload, {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-        expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES_IN') as any,
+        expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES_IN') as JwtExpiresIn,
       }),
       refreshToken: this.jwtService.sign(payload, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
-        expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES_IN') as any,
+        expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES_IN') as JwtExpiresIn,
       }),
     };
 

@@ -1,9 +1,9 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: @nestjs/jwt v11 expiresIn 타입이 ms의 StringValue를 요구하나 string과 호환되지 않는 라이브러리 타입 이슈 */
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
 import { TypedCommandBus } from 'src/common/cqrs';
+import type { JwtExpiresIn } from 'src/common/types/jwt.types';
 import { SaveRefreshTokenCommand } from '../command/save-refresh-token.command';
 
 @Injectable()
@@ -33,11 +33,11 @@ export class GithubCallbackUseCase {
     const tokens = {
       accessToken: this.jwtService.sign(payload, {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-        expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES_IN') as any,
+        expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES_IN') as JwtExpiresIn,
       }),
       refreshToken: this.jwtService.sign(payload, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
-        expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES_IN') as any,
+        expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES_IN') as JwtExpiresIn,
       }),
     };
 
