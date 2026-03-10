@@ -42,16 +42,62 @@ export default function ProfilePage(): React.JSX.Element {
     }
   }, [profile]);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const compressImage = (file: File): Promise<File> =>
+    new Promise((resolve, reject) => {
+      const img = new window.Image();
+      const objectUrl = URL.createObjectURL(file);
+
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+
+        const maxSize = 256;
+        const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d')?.drawImage(img, 0, 0, w, h);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return reject(new Error('이미지 변환에 실패했습니다'));
+            resolve(new File([blob], 'avatar.webp', { type: 'image/webp' }));
+          },
+          'image/webp',
+          0.85,
+        );
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error('이미지를 불러올 수 없습니다'));
+      };
+
+      img.src = objectUrl;
+    });
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    setAvatarFile(file);
-    setAvatarPreview((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return URL.createObjectURL(file);
-    });
+    if (file.size > 5 * 1024 * 1024) {
+      setProfileMessage({ type: 'error', text: '5MB 이하 이미지만 업로드할 수 있습니다' });
+      return;
+    }
+
+    try {
+      const compressed = await compressImage(file);
+      setAvatarFile(compressed);
+      setAvatarPreview((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(compressed);
+      });
+    } catch {
+      setProfileMessage({ type: 'error', text: '이미지 처리에 실패했습니다' });
+    }
   };
 
   useEffect(() => {
@@ -188,7 +234,7 @@ export default function ProfilePage(): React.JSX.Element {
           </button>
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">{profile.email}</p>
-            <p>클릭하여 프로필 사진 변경 (최대 2MB)</p>
+            <p>클릭하여 프로필 사진 변경 (최대 5MB, 자동 압축)</p>
           </div>
           <input
             ref={fileInputRef}

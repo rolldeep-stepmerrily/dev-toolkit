@@ -27,7 +27,4 @@ if (exists) {
   console.log(`✓ Bucket "${MINIO_BUCKET_NAME}" created`);
 }
 
-// Note: MinIO 2024+ configures CORS at the server level via `cors_allow_origin` in API config.
-// Use: mc admin config set <alias> api cors_allow_origin=*
-// The bucket-level PutBucketCors S3 API is not supported in recent MinIO versions.
 console.log('\nDone!');
