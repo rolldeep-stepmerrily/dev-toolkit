@@ -10,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
-import { RedisModule, RedisService, RedisThrottlerStorage } from './common/redis';
+import { RedisModule, RedisThrottlerStorage } from './common/redis';
 import { S3Module } from './common/s3';
 import { BcryptModule } from './tools/bcrypt/bcrypt.module';
 import { IpModule } from './tools/ip/ip.module';
@@ -20,10 +20,10 @@ import { UsersModule } from './users/users.module';
   imports: [
     RedisModule,
     ThrottlerModule.forRootAsync({
-      inject: [RedisService],
-      useFactory: (redisService: RedisService) => ({
+      inject: [RedisThrottlerStorage],
+      useFactory: (redisThrottlerStorage: RedisThrottlerStorage) => ({
         throttlers: [{ name: 'default', ttl: 60_000, limit: 60 }],
-        storage: new RedisThrottlerStorage(redisService.getClient()),
+        storage: redisThrottlerStorage,
       }),
     }),
     ConfigModule.forRoot({
