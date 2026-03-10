@@ -12,21 +12,30 @@ type IndentType = '2' | '4' | 'tab';
 
 const jsonToYaml = (obj: unknown, indent = 0): string => {
   const pad = '  '.repeat(indent);
-  if (obj === null) return 'null';
-  if (typeof obj === 'string')
+  if (obj === null) {
+    return 'null';
+  }
+  if (typeof obj === 'string') {
     return obj.includes('\n')
       ? `|\n${obj
           .split('\n')
           .map((l) => `${pad}  ${l}`)
           .join('\n')}`
       : obj;
-  if (typeof obj !== 'object') return String(obj);
+  }
+  if (typeof obj !== 'object') {
+    return String(obj);
+  }
   if (Array.isArray(obj)) {
-    if (obj.length === 0) return '[]';
+    if (obj.length === 0) {
+      return '[]';
+    }
     return obj.map((item) => `${pad}- ${jsonToYaml(item, indent + 1)}`).join('\n');
   }
   const entries = Object.entries(obj as Record<string, unknown>);
-  if (entries.length === 0) return '{}';
+  if (entries.length === 0) {
+    return '{}';
+  }
   return entries
     .map(([k, v]) => {
       const val = jsonToYaml(v, indent + 1);

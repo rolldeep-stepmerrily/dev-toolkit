@@ -28,13 +28,17 @@ export default function QrPage() {
 
   const handleDownload = (): void => {
     const svgEl = svgRef.current;
-    if (!svgEl) return;
+    if (!svgEl) {
+      return;
+    }
 
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      return;
+    }
 
     const svgString = new XMLSerializer().serializeToString(svgEl);
     const blob = new Blob([svgString], { type: 'image/svg+xml' });

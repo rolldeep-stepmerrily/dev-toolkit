@@ -13,10 +13,14 @@ export function CopyButton({ value }: CopyButtonProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleCopy = async () => {
-    if (!value) return;
+    if (!value) {
+      return;
+    }
     await navigator.clipboard.writeText(value);
     setCopied(true);
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
     timerRef.current = setTimeout(() => setCopied(false), 2000);
   };
 
