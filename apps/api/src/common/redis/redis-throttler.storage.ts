@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { ThrottlerStorage } from '@nestjs/throttler';
-import type Redis from 'ioredis';
+
+import { RedisService } from './redis.service';
 
 interface ThrottlerStorageRecord {
   totalHits: number;
@@ -11,7 +12,7 @@ interface ThrottlerStorageRecord {
 
 @Injectable()
 export class RedisThrottlerStorage implements ThrottlerStorage {
-  constructor(private readonly client: Redis) {}
+  constructor(private readonly redisService: RedisService) {}
 
   /**
    * 요청 횟수를 증가시키고 throttle 상태를 반환
@@ -33,10 +34,11 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
     const hitKey = `throttle:${throttlerName}:${key}`;
     const blockKey = `throttle:block:${throttlerName}:${key}`;
 
-    const isBlocked = (await this.client.exists(blockKey)) === 1;
+    const client = this.redisService.getClient();
+    const isBlocked = (await client.exists(blockKey)) === 1;
 
     if (isBlocked) {
-      const blockPttl = await this.client.pttl(blockKey);
+      const blockPttl = await client.pttl(blockKey);
 
       return {
         totalHits: limit + 1,
@@ -46,17 +48,17 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
       };
     }
 
-    const totalHits = await this.client.incr(hitKey);
+    const totalHits = await client.incr(hitKey);
 
     if (totalHits === 1) {
-      await this.client.pexpire(hitKey, ttl);
+      await client.pexpire(hitKey, ttl);
     }
 
-    const timeToExpire = Math.max(0, await this.client.pttl(hitKey));
+    const timeToExpire = Math.max(0, await client.pttl(hitKey));
 
     if (totalHits > limit && blockDuration > 0) {
-      await this.client.set(blockKey, '1', 'PX', blockDuration);
-      const blockPttl = Math.max(0, await this.client.pttl(blockKey));
+      await client.set(blockKey, '1', 'PX', blockDuration);
+      const blockPttl = Math.max(0, await client.pttl(blockKey));
 
       return { totalHits, timeToExpire, isBlocked: true, timeToBlockExpire: blockPttl };
     }
