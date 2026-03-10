@@ -1,11 +1,13 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { HashUseCase } from 'src/tools/bcrypt/application/use-cases/hash.use-case';
 import { VerifyUseCase } from 'src/tools/bcrypt/application/use-cases/verify.use-case';
 import { BcryptRouter } from './bcrypt.path.presenter';
 import { HashRequestDto, HashResponseDto } from './dto/hash.dto';
 import { VerifyRequestDto, VerifyResponseDto } from './dto/verify.dto';
 
+@Throttle({ default: { limit: 10, ttl: 60_000 } })
 @ApiTags(BcryptRouter.HttpApiTags)
 @Controller(BcryptRouter.Root)
 export class BcryptHttpController {

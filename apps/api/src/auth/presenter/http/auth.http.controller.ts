@@ -1,8 +1,8 @@
 import { User } from '@@decorators';
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import type { Request, Response } from 'express';
 import { GithubCallbackUseCase } from 'src/auth/application/use-cases/github-callback.use-case';
 import { LoginUseCase } from 'src/auth/application/use-cases/login.use-case';
 import { LogoutUseCase } from 'src/auth/application/use-cases/logout.use-case';
@@ -87,7 +87,10 @@ export class AuthHttpController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post(AuthRouter.Http.Logout)
-  async logout(@User() user: { id: number }, @Body() dto: LogoutDto): Promise<void> {
-    await this.logoutUseCase.execute({ userId: user.id, refreshToken: dto.refreshToken });
+  async logout(@User() user: { id: number }, @Body() dto: LogoutDto, @Req() req: Request): Promise<void> {
+    const authHeader = req.headers.authorization;
+    const accessToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : '';
+
+    await this.logoutUseCase.execute({ userId: user.id, refreshToken: dto.refreshToken, accessToken });
   }
 }

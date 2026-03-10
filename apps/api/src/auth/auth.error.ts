@@ -21,4 +21,9 @@ export const AUTH_ERRORS = {
     errorCode: 'AUTH_USER_NOT_FOUND',
     message: '사용자를 찾을 수 없습니다',
   },
+  REVOKED_TOKEN: {
+    statusCode: HttpStatus.UNAUTHORIZED,
+    errorCode: 'AUTH_REVOKED_TOKEN',
+    message: '이미 로그아웃된 토큰입니다',
+  },
 };

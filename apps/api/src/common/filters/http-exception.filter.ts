@@ -22,6 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const isUnAuthorized = statusCode === HttpStatus.UNAUTHORIZED;
     const isBadRequest = statusCode === HttpStatus.BAD_REQUEST;
+    const isTooManyRequests = statusCode === HttpStatus.TOO_MANY_REQUESTS;
 
     let errorCode: string;
 
@@ -32,12 +33,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
         errorCode = 'UNAUTHORIZED_KEY';
       } else if (isBadRequest) {
         errorCode = 'INVALID_REQUEST';
+      } else if (isTooManyRequests) {
+        errorCode = 'TOO_MANY_REQUESTS';
       } else {
         errorCode = 'UNDEFINED_ERROR_CODE';
       }
     }
 
-    const message = isUnAuthorized ? 'Unauthorized key' : error.message || 'UNDEFINED_ERROR_MESSAGE';
+    const message = isUnAuthorized
+      ? 'Unauthorized key'
+      : isTooManyRequests
+        ? 'Too many requests. Please try again later.'
+        : error.message || 'UNDEFINED_ERROR_MESSAGE';
 
     return response.status(statusCode).json({
       statusCode,
