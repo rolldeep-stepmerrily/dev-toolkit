@@ -92,6 +92,14 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@@decorators$": "<rootDir>/common/decorators/index",
+      "^@@entities$": "<rootDir>/common/entities/index",
+      "^@@exceptions$": "<rootDir>/common/exceptions/index",
+      "^@@pipes$": "<rootDir>/common/pipes/index",
+      "^@@prisma$": "<rootDir>/generated/prisma/client",
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }
