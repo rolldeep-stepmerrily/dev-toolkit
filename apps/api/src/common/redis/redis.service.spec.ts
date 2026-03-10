@@ -21,6 +21,7 @@ describe('RedisService', () => {
         if (key === 'REDIS_PORT') return 6379;
         throw new Error(`Unknown config key: ${key}`);
       }),
+      get: jest.fn().mockReturnValue(undefined),
     } as unknown as ConfigService;
 
     service = new RedisService(configService);
