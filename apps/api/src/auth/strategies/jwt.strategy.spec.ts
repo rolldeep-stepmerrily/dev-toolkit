@@ -25,7 +25,6 @@ jest.mock('@nestjs/passport', () => ({
 }));
 
 // passport-jwt mock이 먼저 적용된 후 import 해야 하므로 require 사용
-// biome-ignore lint/style/useNamingConvention: require로 클래스 지연 import 시 PascalCase 필요
 const { JwtStrategy } = require('./jwt.strategy') as {
   // biome-ignore lint/style/useNamingConvention: 클래스 생성자 참조 타입 프로퍼티
   JwtStrategy: new (
@@ -44,11 +43,11 @@ const expectErrorCode = async (promise: Promise<unknown>, expectedErrorCode: str
 
 describe('JwtStrategy', () => {
   let strategy: { validate: (req: Request, payload: { sub: number; email: string }) => Promise<unknown> };
-  let mockPrisma: { user: { findUnique: jest.Mock } };
+  let mockPrisma: { user: { findFirst: jest.Mock } };
   let mockRedisService: { isBlacklisted: jest.Mock };
 
   beforeEach(() => {
-    mockPrisma = { user: { findUnique: jest.fn() } };
+    mockPrisma = { user: { findFirst: jest.fn() } };
     mockRedisService = { isBlacklisted: jest.fn() };
 
     const mockConfigService = {
@@ -72,7 +71,7 @@ describe('JwtStrategy', () => {
 
     it('사용자가 존재하지 않으면 USER_NOT_FOUND 예외를 던진다', async () => {
       mockRedisService.isBlacklisted.mockResolvedValue(false);
-      mockPrisma.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.findFirst.mockResolvedValue(null);
 
       await expectErrorCode(strategy.validate(mockReq, payload), AUTH_ERRORS.USER_NOT_FOUND.errorCode);
     });
@@ -80,17 +79,17 @@ describe('JwtStrategy', () => {
     it('유효한 토큰이고 사용자가 존재하면 사용자 정보를 반환한다', async () => {
       const mockUser = { id: 1, email: 'user@example.com' };
       mockRedisService.isBlacklisted.mockResolvedValue(false);
-      mockPrisma.user.findUnique.mockResolvedValue(mockUser);
+      mockPrisma.user.findFirst.mockResolvedValue(mockUser);
 
       const result = await strategy.validate(mockReq, payload);
 
       expect(result).toEqual(mockUser);
-      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({ where: { id: payload.sub } });
+      expect(mockPrisma.user.findFirst).toHaveBeenCalledWith({ where: { id: payload.sub, deletedAt: null } });
     });
 
     it('토큰 추출 결과가 null이면 블랙리스트를 확인하지 않는다', async () => {
       mockTokenExtractor.mockReturnValue(null);
-      mockPrisma.user.findUnique.mockResolvedValue({ id: 1, email: 'user@example.com' });
+      mockPrisma.user.findFirst.mockResolvedValue({ id: 1, email: 'user@example.com' });
 
       await strategy.validate(mockReq, payload);
 
@@ -100,7 +99,7 @@ describe('JwtStrategy', () => {
     it('블랙리스트 확인 시 추출된 토큰 값을 전달한다', async () => {
       mockTokenExtractor.mockReturnValue('specific-token-value');
       mockRedisService.isBlacklisted.mockResolvedValue(false);
-      mockPrisma.user.findUnique.mockResolvedValue({ id: 1, email: 'user@example.com' });
+      mockPrisma.user.findFirst.mockResolvedValue({ id: 1, email: 'user@example.com' });
 
       await strategy.validate(mockReq, payload);
 

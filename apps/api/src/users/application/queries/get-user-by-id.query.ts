@@ -15,7 +15,7 @@ export class GetUserByIdQueryHandler implements IQueryHandler<GetUserByIdQuery> 
   async execute(query: GetUserByIdQuery): Promise<UserEntity | null> {
     const { userId } = query.props;
 
-    return await this.prisma.user.findUnique({ where: { id: userId } });
+    return await this.prisma.user.findFirst({ where: { id: userId, deletedAt: null } });
   }
 }
 

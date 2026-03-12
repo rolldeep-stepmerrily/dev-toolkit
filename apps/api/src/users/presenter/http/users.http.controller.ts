@@ -1,8 +1,9 @@
 import { User } from '@@decorators';
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ChangePasswordUseCase } from 'src/users/application/use-cases/change-password.use-case';
+import { DeleteUserUseCase } from 'src/users/application/use-cases/delete-user.use-case';
 import { GetAvatarPresignedUrlUseCase } from 'src/users/application/use-cases/get-avatar-presigned-url.use-case';
 import { GetBookmarksUseCase } from 'src/users/application/use-cases/get-bookmarks.use-case';
 import { GetMeUseCase } from 'src/users/application/use-cases/get-me.use-case';
@@ -26,6 +27,7 @@ export class UsersHttpController {
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly getBookmarksUseCase: GetBookmarksUseCase,
     private readonly toggleBookmarkUseCase: ToggleBookmarkUseCase,
+    private readonly deleteUserUseCase: DeleteUserUseCase,
   ) {}
 
   @ApiOperation({ summary: '내 프로필 조회' })
@@ -71,5 +73,12 @@ export class UsersHttpController {
   @Post(UsersRouter.Http.ToggleBookmark)
   async toggleBookmark(@User() user: { id: number }, @Param('toolId') toolId: string): Promise<string[]> {
     return await this.toggleBookmarkUseCase.execute({ userId: user.id, toolId });
+  }
+
+  @ApiOperation({ summary: '회원 탈퇴' })
+  @HttpCode(HttpStatus.OK)
+  @Delete(UsersRouter.Http.DeleteMe)
+  async deleteMe(@User() user: { id: number }): Promise<void> {
+    await this.deleteUserUseCase.execute({ userId: user.id });
   }
 }
