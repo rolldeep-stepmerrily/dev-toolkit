@@ -44,7 +44,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new AppException(AUTH_ERRORS.REVOKED_TOKEN);
     }
 
-    const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
+    const user = await this.prisma.user.findFirst({ where: { id: payload.sub, deletedAt: null } });
 
     if (!isDefined(user)) {
       throw new AppException(AUTH_ERRORS.USER_NOT_FOUND);

@@ -10,6 +10,7 @@ import {
   Globe,
   Hash,
   Key,
+  ListChecks,
   Lock,
   Network,
   Palette,
@@ -42,6 +43,13 @@ const tools = [
   { id: 'yaml', name: 'YAML', description: 'YAML ↔ JSON 변환', href: '/tools/yaml', icon: FileCode2 },
   { id: 'diff', name: 'Diff', description: '텍스트 차이 비교', href: '/tools/diff', icon: GitCompareArrows },
   { id: 'qr', name: 'QR Code', description: 'QR 코드 생성기', href: '/tools/qr', icon: QrCode },
+  {
+    id: 'http-status',
+    name: 'HTTP Status',
+    description: 'HTTP 상태 코드 레퍼런스',
+    href: '/tools/http-status',
+    icon: ListChecks,
+  },
 ];
 
 const toolById = Object.fromEntries(tools.map((t) => [t.id, t]));
